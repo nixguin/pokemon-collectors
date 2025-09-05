@@ -1,0 +1,155 @@
+id,name,type,rarity,set,number,imageUrl
+base1-4,Charizard,Pokemon,Rare,Base Set,4,https://images.pokemontcg.io/base1/4.png
+base1-2,Blastoise,Pokemon,Rare,Base Set,2,https://images.pokemontcg.io/base1/2.png
+base1-15,Venusaur,Pokemon,Rare,Base Set,15,https://images.pokemontcg.io/base1/15.png
+base1-58,Pikachu,Pokemon,Common,Base Set,58,https://images.pokemontcg.io/base1/58.png
+base1-14,Raichu,Pokemon,Rare,Base Set,14,https://images.pokemontcg.io/base1/14.png
+base1-102,Professor Oak,Trainer,Rare,Base Set,102,https://images.pokemontcg.io/base1/102.png
+base1-91,Bill,Trainer,Common,Base Set,91,https://images.pokemontcg.io/base1/91.png
+base1-92,Energy Removal,Trainer,Common,Base Set,92,https://images.pokemontcg.io/base1/92.png
+base1-93,Gust of Wind,Trainer,Common,Base Set,93,https://images.pokemontcg.io/base1/93.png
+base1-94,Potion,Trainer,Common,Base Set,94,https://images.pokemontcg.io/base1/94.png
+base1-90,Super Potion,Trainer,Uncommon,Base Set,90,https://images.pokemontcg.io/base1/90.png
+base1-95,Switch,Trainer,Common,Base Set,95,https://images.pokemontcg.io/base1/95.png
+base1-98,Fire Energy,Energy,Common,Base Set,98,https://images.pokemontcg.io/base1/98.png
+base1-99,Grass Energy,Energy,Common,Base Set,99,https://images.pokemontcg.io/base1/99.png
+base1-100,Lightning Energy,Energy,Common,Base Set,100,https://images.pokemontcg.io/base1/100.png
+base1-101,Psychic Energy,Energy,Common,Base Set,101,https://images.pokemontcg.io/base1/101.png
+base1-103,Water Energy,Energy,Common,Base Set,103,https://images.pokemontcg.io/base1/103.png
+base1-104,Fighting Energy,Energy,Common,Base Set,104,https://images.pokemontcg.io/base1/104.png
+fossil-1,Aerodactyl,Pokemon,Rare,Fossil,1,https://images.pokemontcg.io/fossil/1.png
+fossil-2,Articuno,Pokemon,Rare,Fossil,2,https://images.pokemontcg.io/fossil/2.png
+fossil-3,Ditto,Pokemon,Rare,Fossil,3,https://images.pokemontcg.io/fossil/3.png
+fossil-4,Dragonite,Pokemon,Rare,Fossil,4,https://images.pokemontcg.io/fossil/4.png
+fossil-5,Gengar,Pokemon,Rare,Fossil,5,https://images.pokemontcg.io/fossil/5.png
+fossil-6,Haunter,Pokemon,Uncommon,Fossil,6,https://images.pokemontcg.io/fossil/6.png
+fossil-7,Hitmonlee,Pokemon,Rare,Fossil,7,https://images.pokemontcg.io/fossil/7.png
+fossil-8,Hypno,Pokemon,Rare,Fossil,8,https://images.pokemontcg.io/fossil/8.png
+fossil-9,Kabutops,Pokemon,Rare,Fossil,9,https://images.pokemontcg.io/fossil/9.png
+fossil-10,Lapras,Pokemon,Rare,Fossil,10,https://images.pokemontcg.io/fossil/10.png
+fossil-11,Magneton,Pokemon,Rare,Fossil,11,https://images.pokemontcg.io/fossil/11.png
+fossil-12,Moltres,Pokemon,Rare,Fossil,12,https://images.pokemontcg.io/fossil/12.png
+fossil-13,Muk,Pokemon,Rare,Fossil,13,https://images.pokemontcg.io/fossil/13.png
+fossil-14,Raichu,Pokemon,Rare,Fossil,14,https://images.pokemontcg.io/fossil/14.png
+fossil-15,Zapdos,Pokemon,Rare,Fossil,15,https://images.pokemontcg.io/fossil/15.png
+jungle-1,Clefable,Pokemon,Rare,Jungle,1,https://images.pokemontcg.io/jungle/1.png
+jungle-2,Electrode,Pokemon,Rare,Jungle,2,https://images.pokemontcg.io/jungle/2.png
+jungle-3,Flareon,Pokemon,Rare,Jungle,3,https://images.pokemontcg.io/jungle/3.png
+jungle-4,Jolteon,Pokemon,Rare,Jungle,4,https://images.pokemontcg.io/jungle/4.png
+jungle-5,Kangaskhan,Pokemon,Rare,Jungle,5,https://images.pokemontcg.io/jungle/5.png
+jungle-6,Mr. Mime,Pokemon,Rare,Jungle,6,https://images.pokemontcg.io/jungle/6.png
+jungle-7,Nidoqueen,Pokemon,Rare,Jungle,7,https://images.pokemontcg.io/jungle/7.png
+jungle-8,Pidgeot,Pokemon,Rare,Jungle,8,https://images.pokemontcg.io/jungle/8.png
+jungle-9,Pinsir,Pokemon,Rare,Jungle,9,https://images.pokemontcg.io/jungle/9.png
+jungle-10,Scyther,Pokemon,Rare,Jungle,10,https://images.pokemontcg.io/jungle/10.png
+jungle-11,Snorlax,Pokemon,Rare,Jungle,11,https://images.pokemontcg.io/jungle/11.png
+jungle-12,Vaporeon,Pokemon,Rare,Jungle,12,https://images.pokemontcg.io/jungle/12.png
+jungle-13,Venomoth,Pokemon,Rare,Jungle,13,https://images.pokemontcg.io/jungle/13.png
+jungle-14,Victreebel,Pokemon,Rare,Jungle,14,https://images.pokemontcg.io/jungle/14.png
+jungle-15,Vileplume,Pokemon,Rare,Jungle,15,https://images.pokemontcg.io/jungle/15.png
+gym1-100,Brock,Trainer,Rare,Gym Heroes,100,https://images.pokemontcg.io/gym1/100.png
+gym1-101,Misty,Trainer,Rare,Gym Heroes,101,https://images.pokemontcg.io/gym1/101.png
+gym1-102,Lt. Surge,Trainer,Rare,Gym Heroes,102,https://images.pokemontcg.io/gym1/102.png
+gym1-103,Erika,Trainer,Rare,Gym Heroes,103,https://images.pokemontcg.io/gym1/103.png
+gym1-104,Sabrina,Trainer,Rare,Gym Heroes,104,https://images.pokemontcg.io/gym1/104.png
+gym1-105,Koga,Trainer,Rare,Gym Heroes,105,https://images.pokemontcg.io/gym1/105.png
+gym1-106,Blaine,Trainer,Rare,Gym Heroes,106,https://images.pokemontcg.io/gym1/106.png
+gym1-107,Giovanni,Trainer,Rare,Gym Heroes,107,https://images.pokemontcg.io/gym1/107.png
+gym1-108,Rocket's Sneak Attack,Trainer,Uncommon,Gym Heroes,108,https://images.pokemontcg.io/gym1/108.png
+gym1-109,The Rocket's Training Gym,Trainer,Uncommon,Gym Heroes,109,https://images.pokemontcg.io/gym1/109.png
+gym1-110,Minion of Team Rocket,Trainer,Common,Gym Heroes,110,https://images.pokemontcg.io/gym1/110.png
+gym1-111,Imposter Professor Oak,Trainer,Rare,Gym Heroes,111,https://images.pokemontcg.io/gym1/111.png
+gym1-112,Rocket's Scyther ex,Trainer,Ultra Rare,Gym Heroes,112,https://images.pokemontcg.io/gym1/112.png
+gym1-113,Team Rocket's Mewtwo,Trainer,Ultra Rare,Gym Heroes,113,https://images.pokemontcg.io/gym1/113.png
+neo1-1,Bellossom,Pokemon,Rare,Neo Genesis,1,https://images.pokemontcg.io/neo1/1.png
+neo1-2,Crobat,Pokemon,Rare,Neo Genesis,2,https://images.pokemontcg.io/neo1/2.png
+neo1-3,Feraligatr,Pokemon,Rare,Neo Genesis,3,https://images.pokemontcg.io/neo1/3.png
+neo1-4,Heracross,Pokemon,Rare,Neo Genesis,4,https://images.pokemontcg.io/neo1/4.png
+neo1-5,Jumpluff,Pokemon,Rare,Neo Genesis,5,https://images.pokemontcg.io/neo1/5.png
+neo1-6,Kingdra,Pokemon,Rare,Neo Genesis,6,https://images.pokemontcg.io/neo1/6.png
+neo1-7,Lugia,Pokemon,Ultra Rare,Neo Genesis,7,https://images.pokemontcg.io/neo1/7.png
+neo1-8,Meganium,Pokemon,Rare,Neo Genesis,8,https://images.pokemontcg.io/neo1/8.png
+neo1-9,Pichu,Pokemon,Rare,Neo Genesis,9,https://images.pokemontcg.io/neo1/9.png
+neo1-10,Skarmory,Pokemon,Rare,Neo Genesis,10,https://images.pokemontcg.io/neo1/10.png
+neo1-11,Togetic,Pokemon,Rare,Neo Genesis,11,https://images.pokemontcg.io/neo1/11.png
+neo1-12,Typhlosion,Pokemon,Rare,Neo Genesis,12,https://images.pokemontcg.io/neo1/12.png
+neo1-96,Professor Elm,Trainer,Rare,Neo Genesis,96,https://images.pokemontcg.io/neo1/96.png
+neo1-97,Pokemon Nurse,Trainer,Uncommon,Neo Genesis,97,https://images.pokemontcg.io/neo1/97.png
+neo1-98,Pokemon Daycare,Trainer,Uncommon,Neo Genesis,98,https://images.pokemontcg.io/neo1/98.png
+neo1-99,Time Capsule,Trainer,Rare,Neo Genesis,99,https://images.pokemontcg.io/neo1/99.png
+neo1-100,New Pokedex,Trainer,Uncommon,Neo Genesis,100,https://images.pokemontcg.io/neo1/100.png
+neo1-101,Super Scoop Up,Trainer,Rare,Neo Genesis,101,https://images.pokemontcg.io/neo1/101.png
+neo1-102,Energy Charge,Trainer,Uncommon,Neo Genesis,102,https://images.pokemontcg.io/neo1/102.png
+neo1-103,Focus Band,Trainer,Uncommon,Neo Genesis,103,https://images.pokemontcg.io/neo1/103.png
+neo1-104,Gold Berry,Trainer,Uncommon,Neo Genesis,104,https://images.pokemontcg.io/neo1/104.png
+neo1-105,Metal Energy,Energy,Uncommon,Neo Genesis,105,https://images.pokemontcg.io/neo1/105.png
+neo1-106,Darkness Energy,Energy,Uncommon,Neo Genesis,106,https://images.pokemontcg.io/neo1/106.png
+xy1-1,Venusaur EX,Pokemon,Ultra Rare,XY Base,1,https://images.pokemontcg.io/xy1/1.png
+xy1-2,Caterpie,Pokemon,Common,XY Base,2,https://images.pokemontcg.io/xy1/2.png
+xy1-3,Metapod,Pokemon,Uncommon,XY Base,3,https://images.pokemontcg.io/xy1/3.png
+xy1-4,Butterfree,Pokemon,Rare,XY Base,4,https://images.pokemontcg.io/xy1/4.png
+xy1-5,Weedle,Pokemon,Common,XY Base,5,https://images.pokemontcg.io/xy1/5.png
+xy1-6,Kakuna,Pokemon,Uncommon,XY Base,6,https://images.pokemontcg.io/xy1/6.png
+xy1-7,Beedrill,Pokemon,Rare,XY Base,7,https://images.pokemontcg.io/xy1/7.png
+xy1-8,Ledyba,Pokemon,Common,XY Base,8,https://images.pokemontcg.io/xy1/8.png
+xy1-9,Ledian,Pokemon,Uncommon,XY Base,9,https://images.pokemontcg.io/xy1/9.png
+xy1-10,Spewpa,Pokemon,Uncommon,XY Base,10,https://images.pokemontcg.io/xy1/10.png
+xy1-140,Professor Sycamore,Trainer,Uncommon,XY Base,140,https://images.pokemontcg.io/xy1/140.png
+xy1-141,Roller Skates,Trainer,Uncommon,XY Base,141,https://images.pokemontcg.io/xy1/141.png
+xy1-142,Shauna,Trainer,Uncommon,XY Base,142,https://images.pokemontcg.io/xy1/142.png
+xy1-143,Tierno,Trainer,Uncommon,XY Base,143,https://images.pokemontcg.io/xy1/143.png
+xy1-144,Ultra Ball,Trainer,Uncommon,XY Base,144,https://images.pokemontcg.io/xy1/144.png
+xy1-145,Potion,Trainer,Common,XY Base,145,https://images.pokemontcg.io/xy1/145.png
+xy1-146,Switch,Trainer,Common,XY Base,146,https://images.pokemontcg.io/xy1/146.png
+xy1-147,Fairy Energy,Energy,Uncommon,XY Base,147,https://images.pokemontcg.io/xy1/147.png
+swsh1-1,Grookey,Pokemon,Common,Sword & Shield,1,https://images.pokemontcg.io/swsh1/1.png
+swsh1-2,Thwackey,Pokemon,Uncommon,Sword & Shield,2,https://images.pokemontcg.io/swsh1/2.png
+swsh1-3,Rillaboom,Pokemon,Rare,Sword & Shield,3,https://images.pokemontcg.io/swsh1/3.png
+swsh1-4,Scorbunny,Pokemon,Common,Sword & Shield,4,https://images.pokemontcg.io/swsh1/4.png
+swsh1-5,Raboot,Pokemon,Uncommon,Sword & Shield,5,https://images.pokemontcg.io/swsh1/5.png
+swsh1-6,Cinderace,Pokemon,Rare,Sword & Shield,6,https://images.pokemontcg.io/swsh1/6.png
+swsh1-7,Sobble,Pokemon,Common,Sword & Shield,7,https://images.pokemontcg.io/swsh1/7.png
+swsh1-8,Drizzile,Pokemon,Uncommon,Sword & Shield,8,https://images.pokemontcg.io/swsh1/8.png
+swsh1-9,Inteleon,Pokemon,Rare,Sword & Shield,9,https://images.pokemontcg.io/swsh1/9.png
+swsh1-10,Caterpie,Pokemon,Common,Sword & Shield,10,https://images.pokemontcg.io/swsh1/10.png
+swsh1-169,Professor's Research,Trainer,Uncommon,Sword & Shield,169,https://images.pokemontcg.io/swsh1/169.png
+swsh1-170,Marnie,Trainer,Rare,Sword & Shield,170,https://images.pokemontcg.io/swsh1/170.png
+swsh1-171,Sonia,Trainer,Uncommon,Sword & Shield,171,https://images.pokemontcg.io/swsh1/171.png
+swsh1-172,Quick Ball,Trainer,Uncommon,Sword & Shield,172,https://images.pokemontcg.io/swsh1/172.png
+swsh1-173,Pokemon Communication,Trainer,Uncommon,Sword & Shield,173,https://images.pokemontcg.io/swsh1/173.png
+swsh1-174,Great Ball,Trainer,Uncommon,Sword & Shield,174,https://images.pokemontcg.io/swsh1/174.png
+swsh1-175,Ordinary Rod,Trainer,Uncommon,Sword & Shield,175,https://images.pokemontcg.io/swsh1/175.png
+swsh1-176,Switch,Trainer,Common,Sword & Shield,176,https://images.pokemontcg.io/swsh1/176.png
+swsh1-177,Potion,Trainer,Common,Sword & Shield,177,https://images.pokemontcg.io/swsh1/177.png
+swsh1-178,Energy Retrieval,Trainer,Uncommon,Sword & Shield,178,https://images.pokemontcg.io/swsh1/178.png
+swsh1-179,Energy Search,Trainer,Common,Sword & Shield,179,https://images.pokemontcg.io/swsh1/179.png
+swsh1-180,Capture Energy,Energy,Uncommon,Sword & Shield,180,https://images.pokemontcg.io/swsh1/180.png
+swsh1-181,Twin Energy,Energy,Uncommon,Sword & Shield,181,https://images.pokemontcg.io/swsh1/181.png
+sm1-1,Decidueye GX,Pokemon,Ultra Rare,Sun & Moon,1,https://images.pokemontcg.io/sm1/1.png
+sm1-2,Rowlet,Pokemon,Common,Sun & Moon,2,https://images.pokemontcg.io/sm1/2.png
+sm1-3,Dartrix,Pokemon,Uncommon,Sun & Moon,3,https://images.pokemontcg.io/sm1/3.png
+sm1-4,Decidueye,Pokemon,Rare,Sun & Moon,4,https://images.pokemontcg.io/sm1/4.png
+sm1-5,Fomantis,Pokemon,Common,Sun & Moon,5,https://images.pokemontcg.io/sm1/5.png
+sm1-6,Lurantis,Pokemon,Rare,Sun & Moon,6,https://images.pokemontcg.io/sm1/6.png
+sm1-7,Morelull,Pokemon,Common,Sun & Moon,7,https://images.pokemontcg.io/sm1/7.png
+sm1-8,Shiinotic,Pokemon,Uncommon,Sun & Moon,8,https://images.pokemontcg.io/sm1/8.png
+sm1-149,Professor Kukui,Trainer,Uncommon,Sun & Moon,149,https://images.pokemontcg.io/sm1/149.png
+sm1-150,Professor Lillie,Trainer,Uncommon,Sun & Moon,150,https://images.pokemontcg.io/sm1/150.png
+sm1-151,Hau,Trainer,Uncommon,Sun & Moon,151,https://images.pokemontcg.io/sm1/151.png
+sm1-152,Ilima,Trainer,Uncommon,Sun & Moon,152,https://images.pokemontcg.io/sm1/152.png
+sm1-153,Lana,Trainer,Uncommon,Sun & Moon,153,https://images.pokemontcg.io/sm1/153.png
+sm1-154,Mallow,Trainer,Uncommon,Sun & Moon,154,https://images.pokemontcg.io/sm1/154.png
+sm1-155,Sophocles,Trainer,Uncommon,Sun & Moon,155,https://images.pokemontcg.io/sm1/155.png
+sm1-156,Ultra Ball,Trainer,Uncommon,Sun & Moon,156,https://images.pokemontcg.io/sm1/156.png
+sm1-157,Great Ball,Trainer,Uncommon,Sun & Moon,157,https://images.pokemontcg.io/sm1/157.png
+sm1-158,Nest Ball,Trainer,Uncommon,Sun & Moon,158,https://images.pokemontcg.io/sm1/158.png
+sm1-159,Timer Ball,Trainer,Uncommon,Sun & Moon,159,https://images.pokemontcg.io/sm1/159.png
+sm1-160,Potion,Trainer,Common,Sun & Moon,160,https://images.pokemontcg.io/sm1/160.png
+sm1-161,Super Potion,Trainer,Uncommon,Sun & Moon,161,https://images.pokemontcg.io/sm1/161.png
+sm1-162,Full Heal,Trainer,Uncommon,Sun & Moon,162,https://images.pokemontcg.io/sm1/162.png
+sm1-163,Switch,Trainer,Common,Sun & Moon,163,https://images.pokemontcg.io/sm1/163.png
+sm1-164,Escape Rope,Trainer,Uncommon,Sun & Moon,164,https://images.pokemontcg.io/sm1/164.png
+sm1-165,Energy Retrieval,Trainer,Uncommon,Sun & Moon,165,https://images.pokemontcg.io/sm1/165.png
+sm1-166,Energy Recycler,Trainer,Uncommon,Sun & Moon,166,https://images.pokemontcg.io/sm1/166.png
+sm1-167,Rotom Dex,Trainer,Uncommon,Sun & Moon,167,https://images.pokemontcg.io/sm1/167.png
+sm1-168,Poke Ball,Trainer,Common,Sun & Moon,168,https://images.pokemontcg.io/sm1/168.png 

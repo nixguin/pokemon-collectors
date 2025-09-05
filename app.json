@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "pokemon-trainer-wishlist",
+    "name": "Pokemon TCG Wishlist",
     "slug": "pokemon-trainer-wishlist",
     "version": "1.0.0",
     "orientation": "portrait",
+    "description": "Create and manage your Pokemon Trading Card Game wishlist with AI-powered search",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -13,7 +14,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourname.pokemontrainerwishlist",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
