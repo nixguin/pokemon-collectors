@@ -17,7 +17,6 @@
     "@react-navigation/stack": "^7.4.8",
     "axios": "^1.11.0",
     "expo": "~53.0.22",
-    "expo-sqlite": "^15.2.14",
     "expo-status-bar": "~2.2.3",
     "nativewind": "^4.1.23",
     "papaparse": "^5.5.3",
