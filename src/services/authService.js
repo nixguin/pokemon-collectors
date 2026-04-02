@@ -1,3 +1,4 @@
+import { supabase } from "./supabaseClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class AuthService {
@@ -5,101 +6,116 @@ class AuthService {
     this.currentUser = null;
   }
 
-  // Generate a simple user ID
-  generateUserId() {
-    return "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
-  }
-
-  // Hash password (simple implementation for demo)
-  hashPassword(password) {
-    // In a real app, use proper encryption like bcrypt
-    let hash = 0;
-    for (let i = 0; i < password.length; i++) {
-      const char = password.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString();
-  }
-
-  // Register new user
+  // Register new user with Supabase Auth
   async register(username, email, password) {
     try {
-      // Check if user already exists
-      const existingUsers = await this.getAllUsers();
-      const userExists = existingUsers.find(
-        (user) => user.username === username || user.email === email
-      );
+      // Sign up with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+        },
+      });
 
-      if (userExists) {
-        // Check if it's username or email that's taken
-        if (userExists.username === username) {
+      if (error) {
+        if (error.message.includes("already registered")) {
           throw new Error(
-            "Username is already taken. Please choose a different username."
-          );
-        } else {
-          throw new Error(
-            "An account with this email already exists. Please use a different email or sign in instead."
+            "An account with this email already exists. Please sign in instead.",
           );
         }
+        throw error;
       }
 
-      // Create new user
-      const newUser = {
-        id: this.generateUserId(),
+      const user = data.user;
+      if (!user) {
+        throw new Error("Registration failed. Please try again.");
+      }
+
+      // Check if session is active (email confirmation may block this)
+      const session = data.session;
+      if (!session) {
+        console.warn("No session after signup — email confirmation may be enabled in Supabase.");
+      }
+
+      // Create profile row in profiles table
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user.id,
         username,
         email,
-        password: this.hashPassword(password),
-        createdAt: new Date().toISOString(),
-        wishlist: [],
-        collection: [],
+        created_at: new Date().toISOString(),
+      });
+
+      if (profileError) {
+        console.error("Error creating profile:", profileError.message, profileError.details);
+      }
+
+      const appUser = {
+        id: user.id,
+        username,
+        email,
+        createdAt: user.created_at,
       };
 
-      // Save user
-      const users = [...existingUsers, newUser];
-      await AsyncStorage.setItem("users", JSON.stringify(users));
+      this.currentUser = appUser;
+      await AsyncStorage.setItem("currentUser", JSON.stringify(appUser));
 
-      // Set current user (without password)
-      const { password: _, ...userWithoutPassword } = newUser;
-      this.currentUser = userWithoutPassword;
-      await AsyncStorage.setItem(
-        "currentUser",
-        JSON.stringify(userWithoutPassword)
-      );
-
-      return { success: true, user: userWithoutPassword };
+      return { success: true, user: appUser };
     } catch (error) {
+      console.error("Registration error:", error);
       return { success: false, error: error.message };
     }
   }
 
-  // Login user
+  // Login user with Supabase Auth
   async login(username, password) {
     try {
       console.log("AuthService: Attempting login for:", username);
-      const users = await this.getAllUsers();
-      console.log("AuthService: Found users:", users.length);
-      const user = users.find(
-        (u) =>
-          (u.username === username || u.email === username) &&
-          u.password === this.hashPassword(password)
-      );
 
-      if (!user) {
-        console.log("AuthService: No matching user found");
-        throw new Error("Username or password is incorrect. Please try again.");
+      // Supabase Auth uses email, so if username provided, look it up
+      let email = username;
+      if (!username.includes("@")) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("username", username)
+          .single();
+
+        if (profile) {
+          email = profile.email;
+        } else {
+          throw new Error("Username not found. Please check and try again.");
+        }
       }
 
-      // Set current user (without password)
-      const { password: _, ...userWithoutPassword } = user;
-      this.currentUser = userWithoutPassword;
-      await AsyncStorage.setItem(
-        "currentUser",
-        JSON.stringify(userWithoutPassword)
-      );
-      console.log("AuthService: Login successful, user saved to storage");
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      return { success: true, user: userWithoutPassword };
+      if (error) {
+        throw new Error("Email or password is incorrect. Please try again.");
+      }
+
+      const user = data.user;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+
+      const appUser = {
+        id: user.id,
+        username: profile?.username || user.user_metadata?.username || email,
+        email: user.email,
+        createdAt: user.created_at,
+      };
+
+      this.currentUser = appUser;
+      await AsyncStorage.setItem("currentUser", JSON.stringify(appUser));
+      console.log("AuthService: Login successful");
+
+      return { success: true, user: appUser };
     } catch (error) {
       console.log("AuthService: Login error:", error.message);
       return { success: false, error: error.message };
@@ -108,6 +124,11 @@ class AuthService {
 
   // Logout user
   async logout() {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Supabase signout error:", error);
+    }
     this.currentUser = null;
     await AsyncStorage.removeItem("currentUser");
     return { success: true };
@@ -115,30 +136,47 @@ class AuthService {
 
   // Get current user
   async getCurrentUser() {
-    console.log(
-      "AuthService: getCurrentUser called, currentUser in memory:",
-      !!this.currentUser
-    );
     if (this.currentUser) {
       return this.currentUser;
     }
 
     try {
+      // Check Supabase session first
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        const user = session.user;
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", user.id)
+          .single();
+
+        const appUser = {
+          id: user.id,
+          username:
+            profile?.username || user.user_metadata?.username || user.email,
+          email: user.email,
+          createdAt: user.created_at,
+        };
+
+        this.currentUser = appUser;
+        await AsyncStorage.setItem("currentUser", JSON.stringify(appUser));
+        return appUser;
+      }
+
+      // Fallback to local storage
       const userData = await AsyncStorage.getItem("currentUser");
-      console.log("AuthService: userData from storage:", !!userData);
       if (userData) {
         this.currentUser = JSON.parse(userData);
-        console.log(
-          "AuthService: User loaded from storage:",
-          this.currentUser.username
-        );
         return this.currentUser;
       }
     } catch (error) {
       console.error("Error getting current user:", error);
     }
 
-    console.log("AuthService: No user found");
     return null;
   }
 
@@ -148,69 +186,130 @@ class AuthService {
     return user !== null;
   }
 
-  // Get all users (for internal use)
-  async getAllUsers() {
-    try {
-      const usersData = await AsyncStorage.getItem("users");
-      return usersData ? JSON.parse(usersData) : [];
-    } catch (error) {
-      console.error("Error getting users:", error);
-      return [];
-    }
-  }
-
-  // Update user data
-  async updateUserData(updates) {
+  // Save user's wishlist to Supabase
+  async saveWishlist(wishlist) {
     try {
       if (!this.currentUser) {
         throw new Error("No user logged in");
       }
 
-      const users = await this.getAllUsers();
-      const userIndex = users.findIndex((u) => u.id === this.currentUser.id);
+      const rows = wishlist.map((card) => ({
+        user_id: this.currentUser.id,
+        product_id: String(card.productId),
+        card_data: card,
+      }));
 
-      if (userIndex === -1) {
-        throw new Error("User not found");
+      // Delete existing wishlist for this user, then insert new
+      const { error: deleteError } = await supabase
+        .from("wishlists")
+        .delete()
+        .eq("user_id", this.currentUser.id);
+
+      if (deleteError) {
+        console.error("Error clearing wishlist:", deleteError);
       }
 
-      // Update user data
-      users[userIndex] = { ...users[userIndex], ...updates };
-      await AsyncStorage.setItem("users", JSON.stringify(users));
+      if (rows.length > 0) {
+        const { error: insertError } = await supabase
+          .from("wishlists")
+          .insert(rows);
 
-      // Update current user
-      const { password: _, ...userWithoutPassword } = users[userIndex];
-      this.currentUser = userWithoutPassword;
-      await AsyncStorage.setItem(
-        "currentUser",
-        JSON.stringify(userWithoutPassword)
-      );
+        if (insertError) {
+          console.error("Error saving wishlist:", insertError);
+          throw insertError;
+        }
+      }
 
-      return { success: true, user: userWithoutPassword };
+      return { success: true };
     } catch (error) {
+      console.error("saveWishlist error:", error);
       return { success: false, error: error.message };
     }
   }
 
-  // Save user's wishlist
-  async saveWishlist(wishlist) {
-    return await this.updateUserData({ wishlist });
-  }
-
-  // Save user's collection
+  // Save user's collection to Supabase
   async saveCollection(collection) {
-    return await this.updateUserData({ collection });
+    try {
+      if (!this.currentUser) {
+        throw new Error("No user logged in");
+      }
+
+      const rows = collection.map((card) => ({
+        user_id: this.currentUser.id,
+        product_id: String(card.productId),
+        card_data: card,
+      }));
+
+      // Delete existing collection for this user, then insert new
+      const { error: deleteError } = await supabase
+        .from("collections")
+        .delete()
+        .eq("user_id", this.currentUser.id);
+
+      if (deleteError) {
+        console.error("Error clearing collection:", deleteError);
+      }
+
+      if (rows.length > 0) {
+        const { error: insertError } = await supabase
+          .from("collections")
+          .insert(rows);
+
+        if (insertError) {
+          console.error("Error saving collection:", insertError);
+          throw insertError;
+        }
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error("saveCollection error:", error);
+      return { success: false, error: error.message };
+    }
   }
 
-  // Get user's wishlist
+  // Get user's wishlist from Supabase
   async getWishlist() {
-    const user = await this.getCurrentUser();
-    return user ? user.wishlist || [] : [];
+    try {
+      if (!this.currentUser) return [];
+
+      const { data, error } = await supabase
+        .from("wishlists")
+        .select("card_data")
+        .eq("user_id", this.currentUser.id);
+
+      if (error) {
+        console.error("Error fetching wishlist:", error);
+        return [];
+      }
+
+      return data ? data.map((row) => row.card_data) : [];
+    } catch (error) {
+      console.error("getWishlist error:", error);
+      return [];
+    }
   }
 
-  // Get user's collection
+  // Get user's collection from Supabase
   async getCollection() {
-    const user = await this.getCurrentUser();
-    return user ? user.collection || [] : [];
+    try {
+      if (!this.currentUser) return [];
+
+      const { data, error } = await supabase
+        .from("collections")
+        .select("card_data")
+        .eq("user_id", this.currentUser.id);
+
+      if (error) {
+        console.error("Error fetching collection:", error);
+        return [];
+      }
+
+      return data ? data.map((row) => row.card_data) : [];
+    } catch (error) {
+      console.error("getCollection error:", error);
+      return [];
+    }
   }
 }
 

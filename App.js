@@ -17,6 +17,7 @@ import { cacheService } from "./src/services/cacheService";
 import { getInstantCards } from "./src/data/csvData";
 import * as wishlistDb from "./src/database/wishlistDb";
 import authService from "./src/services/authService";
+import { supabase } from "./src/services/supabaseClient";
 import LoginScreen from "./src/components/LoginScreen";
 
 const { width } = Dimensions.get("window");
@@ -36,7 +37,7 @@ const fetchPokemonSets = async () => {
 const fetchCardsFromSet = async (setId) => {
   try {
     const response = await axios.get(
-      `https://api.tcgdx.net/v2/en/sets/${setId}`
+      `https://api.tcgdex.net/v2/en/sets/${setId}`,
     );
     return response.data.cards || [];
   } catch (error) {
@@ -49,7 +50,7 @@ const fetchAllPokemonCards = async (page = 1, pageSize = 250) => {
   try {
     // Fetch all Pokemon cards (not just trainers)
     const response = await axios.get(
-      `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=${pageSize}`
+      `https://api.pokemontcg.io/v2/cards?page=${page}&pageSize=${pageSize}`,
     );
     console.log("Pokemon TCG API response:", response.data);
     return response.data.data || [];
@@ -63,7 +64,7 @@ const fetchPokemonTrainerCards = async (page = 1, pageSize = 250) => {
   try {
     // Fetch specifically trainer cards with pagination
     const response = await axios.get(
-      `https://api.pokemontcg.io/v2/cards?q=supertype:trainer&page=${page}&pageSize=${pageSize}`
+      `https://api.pokemontcg.io/v2/cards?q=supertype:trainer&page=${page}&pageSize=${pageSize}`,
     );
     console.log(`Pokemon Trainer cards page ${page} response:`, response.data);
     return response.data.data || [];
@@ -94,7 +95,7 @@ const fetchCardsBatch = async (pages, pageSize = 250, cardType = "all") => {
     });
 
     console.log(
-      `🚀 Batch loaded ${allCards.length} ${cardType} cards from ${pages.length} pages`
+      `🚀 Batch loaded ${allCards.length} ${cardType} cards from ${pages.length} pages`,
     );
     return allCards;
   } catch (error) {
@@ -108,7 +109,7 @@ const convertPokemonTCGCard = (card, index = 0) => {
   return {
     productId: `${card.id}-${index}-${Date.now()}`.replace(
       /[^a-zA-Z0-9-]/g,
-      ""
+      "",
     ), // Ensure unique ID
     name: card.name,
     cleanName: card.name,
@@ -160,7 +161,7 @@ const filterTrainerCards = (products) => {
           (data.value.toLowerCase().includes("trainer") ||
             data.value.toLowerCase().includes("supporter") ||
             data.value.toLowerCase().includes("item") ||
-            data.value.toLowerCase().includes("stadium"))
+            data.value.toLowerCase().includes("stadium")),
       );
 
     return isTrainer;
@@ -192,9 +193,8 @@ const RARITY_HIERARCHY = {
   GX: 21,
   "TAG TEAM": 22,
   V: 23,
-  VMAX: 24,
-  Radiant: 25,
-  "Classic Collection": 26,
+  Radiant: 24,
+  "Classic Collection": 25,
 };
 
 const getRarityValue = (rarity) => {
@@ -203,7 +203,7 @@ const getRarityValue = (rarity) => {
 
 const getAllRarities = () => {
   return Object.keys(RARITY_HIERARCHY).sort(
-    (a, b) => getRarityValue(a) - getRarityValue(b)
+    (a, b) => getRarityValue(a) - getRarityValue(b),
   );
 };
 
@@ -486,11 +486,7 @@ export default function App() {
   const initializeDatabase = async () => {
     try {
       await wishlistDb.initDatabase();
-      const savedWishlist = await wishlistDb.getWishlist();
-      if (savedWishlist && savedWishlist.length > 0) {
-        setWishlist(savedWishlist);
-        console.log(`Loaded ${savedWishlist.length} saved wishlist items`);
-      }
+      console.log("WishlistDb initialized (user data loaded via authService)");
     } catch (error) {
       console.log("Database initialization error:", error);
     }
@@ -519,7 +515,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadCachedData(); // Load cached data instantly on app start
     initializeDatabase(); // Initialize database and load saved data
     applyFilters();
   }, []);
@@ -536,182 +531,65 @@ export default function App() {
     rarityFilter,
   ]);
 
+  // Load all cards from Supabase (pre-seeded, instant)
   const loadRealPokemonData = async () => {
     setLoading(true);
     try {
-      console.log(
-        "🚀 TURBO LOADING: Fetching ALL Pokemon cards in parallel..."
-      );
+      console.log("⚡ Loading cards from Supabase...");
 
-      // SUPER FAST PARALLEL LOADING: Load 20 pages simultaneously
-      const BATCH_SIZE = 250;
-      const PARALLEL_PAGES = 20;
+      // Fetch all cards from Supabase in batches of 1000 (Supabase default limit)
+      let allCards = [];
+      let from = 0;
+      const batchSize = 1000;
+      let hasMore = true;
 
-      console.log("Loading 20 pages in parallel for maximum speed...");
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from("cards")
+          .select("card_data, card_type")
+          .range(from, from + batchSize - 1);
 
-      // Create parallel promises for both Pokemon and Trainer cards
-      const allPromises = [];
-      for (let page = 1; page <= PARALLEL_PAGES; page++) {
-        allPromises.push(
-          fetchAllPokemonCards(page, BATCH_SIZE).then((cards) => ({
-            type: "pokemon",
-            page,
-            cards,
-          }))
-        );
-        allPromises.push(
-          fetchPokemonTrainerCards(page, BATCH_SIZE).then((cards) => ({
-            type: "trainer",
-            page,
-            cards,
-          }))
-        );
-      }
-
-      // Wait for ALL parallel requests to complete
-      const results = await Promise.allSettled(allPromises);
-
-      let totalPokemonCards = [];
-      let totalTrainerCards = [];
-
-      // Process all results
-      results.forEach((result, index) => {
-        if (result.status === "fulfilled" && result.value.cards?.length > 0) {
-          const { type, cards, page } = result.value;
-          const convertedCards = cards.map((card, cardIndex) =>
-            convertPokemonTCGCard(card, cardIndex + index * 1000)
-          );
-
-          if (type === "trainer") {
-            totalTrainerCards.push(...convertedCards);
-          } else {
-            totalPokemonCards.push(...convertedCards);
-          }
-
-          console.log(`📦 ${type} page ${page} loaded:`, convertedCards.length);
+        if (error) {
+          console.error("Supabase fetch error:", error);
+          break;
         }
-      });
 
-      // Update state with ALL cards at once (much faster than incremental updates)
-      if (totalPokemonCards.length > 0) {
-        setAllPokemonCards((prev) => {
-          const existingIds = new Set(prev.map((c) => c.productId));
-          const newCards = totalPokemonCards.filter(
-            (c) => !existingIds.has(c.productId)
-          );
-          const updated = [...prev, ...newCards];
-          cacheService.saveAllPokemonCards(updated); // Save immediately
-          return updated;
-        });
-        console.log(
-          `🎯 TOTAL Pokemon cards loaded: ${totalPokemonCards.length}`
-        );
+        if (data && data.length > 0) {
+          allCards.push(...data);
+          from += batchSize;
+          if (data.length < batchSize) hasMore = false;
+        } else {
+          hasMore = false;
+        }
       }
 
-      if (totalTrainerCards.length > 0) {
-        setTrainerCards((prev) => {
-          const existingIds = new Set(prev.map((c) => c.productId));
-          const newCards = totalTrainerCards.filter(
-            (c) => !existingIds.has(c.productId)
-          );
-          const updated = [...prev, ...newCards];
-          cacheService.saveTrainerCards(updated); // Save immediately
-          return updated;
-        });
+      if (allCards.length > 0) {
+        const pokemonCards = allCards.map((row) => row.card_data);
+        const trainers = allCards
+          .filter((row) => row.card_type === "Trainer")
+          .map((row) => row.card_data);
+
+        setAllPokemonCards(pokemonCards);
+        setTrainerCards(trainers);
         console.log(
-          `🎯 TOTAL Trainer cards loaded: ${totalTrainerCards.length}`
+          `✅ Loaded ${pokemonCards.length} total cards (${trainers.length} trainers) from Supabase`,
         );
-      }
-
-      // Continue loading more pages in background for completeness
-      console.log("Loading additional pages in background...");
-      for (let page = PARALLEL_PAGES + 1; page <= 100; page += 5) {
-        setTimeout(() => {
-          const backgroundPromises = [];
-          for (let p = page; p < page + 5 && p <= 100; p++) {
-            backgroundPromises.push(fetchAllPokemonCards(p, BATCH_SIZE));
-            backgroundPromises.push(fetchPokemonTrainerCards(p, BATCH_SIZE));
-          }
-
-          Promise.allSettled(backgroundPromises).then((bgResults) => {
-            let bgPokemon = [];
-            let bgTrainers = [];
-
-            bgResults.forEach((result, idx) => {
-              if (result.status === "fulfilled" && result.value?.length > 0) {
-                const isTrainer = idx % 2 === 1;
-                const converted = result.value.map((card, cardIndex) =>
-                  convertPokemonTCGCard(
-                    card,
-                    cardIndex + page * 5000 + idx * 100
-                  )
-                );
-
-                if (isTrainer) {
-                  bgTrainers.push(...converted);
-                } else {
-                  bgPokemon.push(...converted);
-                }
-              }
-            });
-
-            if (bgPokemon.length > 0) {
-              setAllPokemonCards((prev) => {
-                const existingIds = new Set(prev.map((c) => c.productId));
-                const newCards = bgPokemon.filter(
-                  (c) => !existingIds.has(c.productId)
-                );
-                return [...prev, ...newCards];
-              });
-            }
-
-            if (bgTrainers.length > 0) {
-              setTrainerCards((prev) => {
-                const existingIds = new Set(prev.map((c) => c.productId));
-                const newCards = bgTrainers.filter(
-                  (c) => !existingIds.has(c.productId)
-                );
-                return [...prev, ...newCards];
-              });
-            }
-          });
-        }, (page - PARALLEL_PAGES) * 200); // Stagger background loading
+      } else {
+        console.log("No cards found in Supabase, using local data.");
       }
     } catch (error) {
-      console.error("Error in turbo loading:", error);
-      Alert.alert(
-        "Loading Error",
-        "Some cards may not have loaded. Try refreshing!"
-      );
+      console.error("Error loading cards from Supabase:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Load more cards on demand
+  // Load more cards — no longer needed since all cards are in Supabase
   const loadMoreCards = async () => {
-    if (loadingMore) return;
-
-    setLoadingMore(true);
-    try {
-      const currentPage = Math.floor(allPokemonCards.length / 250) + 1;
-      console.log(`Loading more cards - page ${currentPage}...`);
-
-      const moreCards = await fetchAllPokemonCards(currentPage, 250);
-      if (moreCards.length > 0) {
-        const convertedCards = moreCards.map((card, index) =>
-          convertPokemonTCGCard(card, index + currentPage * 3000)
-        );
-        setAllPokemonCards((prev) => [...prev, ...convertedCards]);
-        console.log(`Loaded ${convertedCards.length} more cards`);
-      } else {
-        Alert.alert("No More Cards", "All available cards have been loaded.");
-      }
-    } catch (error) {
-      console.error("Error loading more cards:", error);
-      Alert.alert("Error", "Failed to load more cards.");
-    }
-    setLoadingMore(false);
+    Alert.alert(
+      "All Loaded",
+      "All available cards have been loaded from the database.",
+    );
   };
 
   const applyFilters = () => {
@@ -724,7 +602,7 @@ export default function App() {
       filtered = filtered.filter(
         (card) =>
           card.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.cleanName.toLowerCase().includes(searchQuery.toLowerCase())
+          card.cleanName.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -762,47 +640,59 @@ export default function App() {
   };
 
   const toggleWishlist = async (card) => {
-    const isInWishlist = wishlist.some((w) => w.productId === card.productId);
+    const wasInWishlist = wishlist.some((w) => w.productId === card.productId);
+    const previousWishlist = wishlist;
     try {
-      if (isInWishlist) {
-        const newWishlist = wishlist.filter(
-          (w) => w.productId !== card.productId
-        );
-        setWishlist(newWishlist);
-        await authService.saveWishlist(newWishlist);
-        Alert.alert("Removed", `${card.name} removed from wishlist`);
+      let newWishlist;
+      if (wasInWishlist) {
+        newWishlist = wishlist.filter((w) => w.productId !== card.productId);
       } else {
-        const newWishlist = [...wishlist, card];
-        setWishlist(newWishlist);
-        await authService.saveWishlist(newWishlist);
-        Alert.alert("Added", `${card.name} added to wishlist`);
+        newWishlist = [...wishlist, card];
       }
+      setWishlist(newWishlist);
+      const result = await authService.saveWishlist(newWishlist);
+      if (!result.success) {
+        setWishlist(previousWishlist);
+        Alert.alert("Error", "Failed to save wishlist. Please try again.");
+        return;
+      }
+      Alert.alert(
+        wasInWishlist ? "Removed" : "Added",
+        `${card.name} ${wasInWishlist ? "removed from" : "added to"} wishlist`,
+      );
     } catch (error) {
       console.log("Error updating wishlist:", error);
+      setWishlist(previousWishlist);
       Alert.alert("Error", "Failed to update wishlist");
     }
   };
 
   const toggleAlreadyHave = async (card) => {
-    const isAlreadyHave = alreadyHave.some(
-      (a) => a.productId === card.productId
-    );
+    const wasOwned = alreadyHave.some((a) => a.productId === card.productId);
+    const previousCollection = alreadyHave;
     try {
-      if (isAlreadyHave) {
-        const newCollection = alreadyHave.filter(
-          (a) => a.productId !== card.productId
+      let newCollection;
+      if (wasOwned) {
+        newCollection = alreadyHave.filter(
+          (a) => a.productId !== card.productId,
         );
-        setAlreadyHave(newCollection);
-        await authService.saveCollection(newCollection);
-        Alert.alert("Removed", `${card.name} removed from collection`);
       } else {
-        const newCollection = [...alreadyHave, card];
-        setAlreadyHave(newCollection);
-        await authService.saveCollection(newCollection);
-        Alert.alert("Added", `${card.name} added to collection`);
+        newCollection = [...alreadyHave, card];
       }
+      setAlreadyHave(newCollection);
+      const result = await authService.saveCollection(newCollection);
+      if (!result.success) {
+        setAlreadyHave(previousCollection);
+        Alert.alert("Error", "Failed to save collection. Please try again.");
+        return;
+      }
+      Alert.alert(
+        wasOwned ? "Removed" : "Added",
+        `${card.name} ${wasOwned ? "removed from" : "added to"} collection`,
+      );
     } catch (error) {
       console.log("Error updating collection:", error);
+      setAlreadyHave(previousCollection);
       Alert.alert("Error", "Failed to update collection");
     }
   };
@@ -872,11 +762,21 @@ export default function App() {
             <TouchableOpacity
               onPress={async () => {
                 try {
+                  // Save to per-user storage (primary)
+                  const result = await authService.saveWishlist(wishlist);
+                  // Also sync to local wishlistDb as backup
                   await wishlistDb.clearWishlist();
                   await Promise.all(
-                    wishlist.map((card) => wishlistDb.addToWishlist(card))
+                    wishlist.map((card) => wishlistDb.addToWishlist(card)),
                   );
-                  Alert.alert("Saved!", "Wishlist saved to database");
+                  if (result.success) {
+                    Alert.alert("Saved!", "Wishlist saved to your account");
+                  } else {
+                    Alert.alert(
+                      "Warning",
+                      "Saved locally but account sync failed. Your data is safe.",
+                    );
+                  }
                 } catch (error) {
                   Alert.alert("Error", "Failed to save wishlist");
                 }
@@ -994,7 +894,7 @@ export default function App() {
           card.extendedData
             ?.find((data) => data.name === "Rarity")
             ?.value?.toLowerCase()
-            .includes("common")
+            .includes("common"),
         );
         botResponse = `Found ${foundCards.length} common cards! Common cards are the most basic rarity.`;
       } else if (query.includes("uncommon")) {
@@ -1002,7 +902,7 @@ export default function App() {
           card.extendedData
             ?.find((data) => data.name === "Rarity")
             ?.value?.toLowerCase()
-            .includes("uncommon")
+            .includes("uncommon"),
         );
         botResponse = `Found ${foundCards.length} uncommon cards! These are slightly rarer than common cards.`;
       } else if (query.includes("ultra rare") || query.includes("ultra")) {
@@ -1010,7 +910,7 @@ export default function App() {
           card.extendedData
             ?.find((data) => data.name === "Rarity")
             ?.value?.toLowerCase()
-            .includes("ultra")
+            .includes("ultra"),
         );
         botResponse = `Found ${foundCards.length} ultra rare cards! These are very special and valuable cards.`;
       } else if (
@@ -1020,7 +920,7 @@ export default function App() {
       ) {
         // Extract rarity from query
         const rarityMatch = query.match(
-          /(higher than|above|better than)\s+(\w+\s*\w*)/
+          /(higher than|above|better than)\s+(\w+\s*\w*)/,
         );
         if (rarityMatch) {
           const targetRarity = rarityMatch[2].trim();
@@ -1040,7 +940,7 @@ export default function App() {
       ) {
         // Extract rarity from query
         const rarityMatch = query.match(
-          /(lower than|below|worse than)\s+(\w+\s*\w*)/
+          /(lower than|below|worse than)\s+(\w+\s*\w*)/,
         );
         if (rarityMatch) {
           const targetRarity = rarityMatch[2].trim();
@@ -1058,13 +958,13 @@ export default function App() {
           card.extendedData
             ?.find((data) => data.name === "Rarity")
             ?.value?.toLowerCase()
-            .includes("rare")
+            .includes("rare"),
         );
         botResponse = `Found ${foundCards.length} rare cards! These include regular rare and ultra rare cards.`;
       }
     } else if (query.includes("mimikyu")) {
       foundCards = cardsToSearch.filter((card) =>
-        card.name.toLowerCase().includes("mimikyu")
+        card.name.toLowerCase().includes("mimikyu"),
       );
 
       if (foundCards.length === 0) {
@@ -1118,7 +1018,7 @@ export default function App() {
       foundCards = cardsToSearch.filter(
         (card) =>
           card.name.toLowerCase().includes(query) ||
-          card.cleanName.toLowerCase().includes(query)
+          card.cleanName.toLowerCase().includes(query),
       );
       botResponse =
         foundCards.length > 0
@@ -1229,73 +1129,6 @@ export default function App() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={async () => {
-              setLoading(true);
-              try {
-                console.log("🚀 TURBO LOADING ALL CARDS...");
-
-                // Load 20 pages of each type in parallel
-                const [pokemonBatch, trainerBatch] = await Promise.all([
-                  fetchCardsBatch(
-                    [
-                      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                      18, 19, 20,
-                    ],
-                    250,
-                    "all"
-                  ),
-                  fetchCardsBatch(
-                    [
-                      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                      18, 19, 20,
-                    ],
-                    250,
-                    "trainers"
-                  ),
-                ]);
-
-                // Convert and add all cards
-                if (pokemonBatch.length > 0) {
-                  const convertedPokemon = pokemonBatch.map((card, index) =>
-                    convertPokemonTCGCard(card, index + 70000)
-                  );
-                  setAllPokemonCards((prev) => {
-                    const existingIds = new Set(prev.map((c) => c.productId));
-                    const newCards = convertedPokemon.filter(
-                      (c) => !existingIds.has(c.productId)
-                    );
-                    return [...prev, ...newCards];
-                  });
-                }
-
-                if (trainerBatch.length > 0) {
-                  const convertedTrainers = trainerBatch.map((card, index) =>
-                    convertPokemonTCGCard(card, index + 80000)
-                  );
-                  setTrainerCards((prev) => {
-                    const existingIds = new Set(prev.map((c) => c.productId));
-                    const newCards = convertedTrainers.filter(
-                      (c) => !existingIds.has(c.productId)
-                    );
-                    return [...prev, ...newCards];
-                  });
-                }
-
-                Alert.alert(
-                  "Success!",
-                  `🚀 Turbo loaded ${pokemonBatch.length} Pokemon + ${trainerBatch.length} Trainer cards!`
-                );
-              } catch (error) {
-                Alert.alert("Error", "Turbo loading failed");
-              } finally {
-                setLoading(false);
-              }
-            }}
-            style={styles.headerButton}
-          >
-            <Text style={styles.headerButtonText}>🚀 Turbo Load</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
             onPress={() => setCurrentView("wishlist")}
             style={styles.headerButton}
           >
@@ -1403,16 +1236,16 @@ export default function App() {
               selectedRarity === "all"
                 ? "rare"
                 : selectedRarity === "rare"
-                ? "ultra rare"
-                : selectedRarity === "ultra rare"
-                ? "secret rare"
-                : selectedRarity === "secret rare"
-                ? "hyper rare"
-                : selectedRarity === "hyper rare"
-                ? "rainbow rare"
-                : selectedRarity === "rainbow rare"
-                ? "gold rare"
-                : "all"
+                  ? "ultra rare"
+                  : selectedRarity === "ultra rare"
+                    ? "secret rare"
+                    : selectedRarity === "secret rare"
+                      ? "hyper rare"
+                      : selectedRarity === "hyper rare"
+                        ? "rainbow rare"
+                        : selectedRarity === "rainbow rare"
+                          ? "gold rare"
+                          : "all",
             )
           }
           style={[
@@ -1529,10 +1362,10 @@ export default function App() {
               selectedType === "all"
                 ? "pokemon"
                 : selectedType === "pokemon"
-                ? "trainer"
-                : selectedType === "trainer"
-                ? "energy"
-                : "all"
+                  ? "trainer"
+                  : selectedType === "trainer"
+                    ? "energy"
+                    : "all",
             )
           }
           style={[
@@ -1584,8 +1417,8 @@ export default function App() {
               (rarityFilter === "exact"
                 ? selectedRarity
                 : rarityFilter === "higher"
-                ? `≥ ${selectedRarity}`
-                : `≤ ${selectedRarity}`)}{" "}
+                  ? `≥ ${selectedRarity}`
+                  : `≤ ${selectedRarity}`)}{" "}
             {selectedType !== "all" && selectedType}
           </Text>
         )}
