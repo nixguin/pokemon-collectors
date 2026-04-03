@@ -9,14 +9,15 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import authService from "../services/authService";
 
-const { width } = Dimensions.get("window");
-const isMobile = width < 768;
-
 const LoginScreen = ({ onLoginSuccess }) => {
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
+
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
@@ -49,7 +50,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       newErrors.username = "Username is required";
       Alert.alert(
         "Validation Error",
-        "Username is required. Please enter your username."
+        "Username is required. Please enter your username.",
       );
     }
 
@@ -57,13 +58,13 @@ const LoginScreen = ({ onLoginSuccess }) => {
       newErrors.email = "Email is required";
       Alert.alert(
         "Validation Error",
-        "Email address is required for registration."
+        "Email address is required for registration.",
       );
     } else if (!isLogin && !email.includes("@")) {
       newErrors.email = "Invalid email format";
       Alert.alert(
         "Validation Error",
-        "Please enter a valid email address (example: user@email.com)."
+        "Please enter a valid email address (example: user@email.com).",
       );
     }
 
@@ -71,13 +72,13 @@ const LoginScreen = ({ onLoginSuccess }) => {
       newErrors.password = "Password is required";
       Alert.alert(
         "Validation Error",
-        "Password is required. Please enter your password."
+        "Password is required. Please enter your password.",
       );
     } else if (password.length < 6) {
       newErrors.password = "Password too short";
       Alert.alert(
         "Validation Error",
-        "Password must be at least 6 characters long for security."
+        "Password must be at least 6 characters long for security.",
       );
     }
 
@@ -85,7 +86,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       newErrors.confirmPassword = "Passwords don't match";
       Alert.alert(
         "Validation Error",
-        "Passwords do not match. Please make sure both password fields are identical."
+        "Passwords do not match. Please make sure both password fields are identical.",
       );
     }
 
@@ -115,7 +116,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         setTimeout(() => {
           Alert.alert(
             "Success!",
-            isLogin ? "Welcome back!" : "Account created successfully!"
+            isLogin ? "Welcome back!" : "Account created successfully!",
           );
         }, 100);
       } else {
@@ -128,7 +129,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       const errorTitle = isLogin ? "Login Error" : "Registration Error";
       Alert.alert(
         errorTitle,
-        "Something went wrong. Please check your connection and try again."
+        "Something went wrong. Please check your connection and try again.",
       );
     } finally {
       setLoading(false);
@@ -151,152 +152,164 @@ const LoginScreen = ({ onLoginSuccess }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+    <SafeAreaProvider>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={styles.formContainer}>
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>
-              {isLogin ? "🌸 Welcome Back!" : "🌸 Join Us!"}
-            </Text>
-            <Text style={styles.subtitle}>
-              {isLogin
-                ? "Sign in to access your Pokemon card wishlist"
-                : "Create your account to start collecting"}
-            </Text>
-          </View>
-
-          {/* Form */}
-          <View style={styles.form}>
-            {/* Username */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Username</Text>
-              <TextInput
-                style={[styles.input, errors.username && styles.inputError]}
-                value={formData.username}
-                onChangeText={(value) => handleInputChange("username", value)}
-                placeholder="Enter your username"
-                placeholderTextColor="#d1a3d1"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              {errors.username && (
-                <Text style={styles.errorText}>{errors.username}</Text>
-              )}
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContainer,
+            { paddingHorizontal: isMobile ? 20 : 40 },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View
+            style={[
+              styles.formContainer,
+              { maxWidth: isMobile ? "100%" : 400 },
+            ]}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.title}>
+                {isLogin ? "🌸 Welcome Back!" : "🌸 Join Us!"}
+              </Text>
+              <Text style={styles.subtitle}>
+                {isLogin
+                  ? "Sign in to access your Pokemon card wishlist"
+                  : "Create your account to start collecting"}
+              </Text>
             </View>
 
-            {/* Email (only for register) */}
-            {!isLogin && (
+            {/* Form */}
+            <View style={styles.form}>
+              {/* Username */}
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>Username</Text>
                 <TextInput
-                  style={[styles.input, errors.email && styles.inputError]}
-                  value={formData.email}
-                  onChangeText={(value) => handleInputChange("email", value)}
-                  placeholder="Enter your email"
+                  style={[styles.input, errors.username && styles.inputError]}
+                  value={formData.username}
+                  onChangeText={(value) => handleInputChange("username", value)}
+                  placeholder="Enter your username"
                   placeholderTextColor="#d1a3d1"
-                  keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
-                {errors.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
+                {errors.username && (
+                  <Text style={styles.errorText}>{errors.username}</Text>
                 )}
               </View>
-            )}
 
-            {/* Password */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={[styles.input, errors.password && styles.inputError]}
-                value={formData.password}
-                onChangeText={(value) => handleInputChange("password", value)}
-                placeholder="Enter your password"
-                placeholderTextColor="#d1a3d1"
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              {errors.password && (
-                <Text style={styles.errorText}>{errors.password}</Text>
+              {/* Email (only for register) */}
+              {!isLogin && (
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Email</Text>
+                  <TextInput
+                    style={[styles.input, errors.email && styles.inputError]}
+                    value={formData.email}
+                    onChangeText={(value) => handleInputChange("email", value)}
+                    placeholder="Enter your email"
+                    placeholderTextColor="#d1a3d1"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  {errors.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+                </View>
               )}
-            </View>
 
-            {/* Confirm Password (only for register) */}
-            {!isLogin && (
+              {/* Password */}
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Confirm Password</Text>
+                <Text style={styles.label}>Password</Text>
                 <TextInput
-                  style={[
-                    styles.input,
-                    errors.confirmPassword && styles.inputError,
-                  ]}
-                  value={formData.confirmPassword}
-                  onChangeText={(value) =>
-                    handleInputChange("confirmPassword", value)
-                  }
-                  placeholder="Confirm your password"
+                  style={[styles.input, errors.password && styles.inputError]}
+                  value={formData.password}
+                  onChangeText={(value) => handleInputChange("password", value)}
+                  placeholder="Enter your password"
                   placeholderTextColor="#d1a3d1"
                   secureTextEntry
                   autoCapitalize="none"
                   autoCorrect={false}
                 />
-                {errors.confirmPassword && (
-                  <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                {errors.password && (
+                  <Text style={styles.errorText}>{errors.password}</Text>
                 )}
               </View>
-            )}
 
-            {/* Submit Button */}
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                loading && styles.submitButtonDisabled,
-              ]}
-              onPress={handleSubmit}
-              disabled={loading}
-            >
-              <Text style={styles.submitButtonText}>
-                {loading
-                  ? "⏳ Please wait..."
-                  : isLogin
-                  ? "🚀 Sign In"
-                  : "✨ Create Account"}
-              </Text>
-            </TouchableOpacity>
+              {/* Confirm Password (only for register) */}
+              {!isLogin && (
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Confirm Password</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      errors.confirmPassword && styles.inputError,
+                    ]}
+                    value={formData.confirmPassword}
+                    onChangeText={(value) =>
+                      handleInputChange("confirmPassword", value)
+                    }
+                    placeholder="Confirm your password"
+                    placeholderTextColor="#d1a3d1"
+                    secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  {errors.confirmPassword && (
+                    <Text style={styles.errorText}>
+                      {errors.confirmPassword}
+                    </Text>
+                  )}
+                </View>
+              )}
 
-            {/* Toggle Mode */}
-            <View style={styles.toggleContainer}>
-              <Text style={styles.toggleText}>
-                {isLogin
-                  ? "Don't have an account? "
-                  : "Already have an account? "}
-              </Text>
-              <TouchableOpacity onPress={toggleMode}>
-                <Text style={styles.toggleLink}>
-                  {isLogin ? "Sign Up" : "Sign In"}
+              {/* Submit Button */}
+              <TouchableOpacity
+                style={[
+                  styles.submitButton,
+                  loading && styles.submitButtonDisabled,
+                ]}
+                onPress={handleSubmit}
+                disabled={loading}
+              >
+                <Text style={styles.submitButtonText}>
+                  {loading
+                    ? "⏳ Please wait..."
+                    : isLogin
+                      ? "🚀 Sign In"
+                      : "✨ Create Account"}
                 </Text>
               </TouchableOpacity>
+
+              {/* Toggle Mode */}
+              <View style={styles.toggleContainer}>
+                <Text style={styles.toggleText}>
+                  {isLogin
+                    ? "Don't have an account? "
+                    : "Already have an account? "}
+                </Text>
+                <TouchableOpacity onPress={toggleMode}>
+                  <Text style={styles.toggleLink}>
+                    {isLogin ? "Sign Up" : "Sign In"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                🔒 Your data is stored securely on your device
+              </Text>
             </View>
           </View>
-
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              🔒 Your data is stored securely on your device
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaProvider>
   );
 };
 
@@ -308,11 +321,9 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: "center",
-    paddingHorizontal: isMobile ? 20 : 40,
     paddingVertical: 40,
   },
   formContainer: {
-    maxWidth: isMobile ? "100%" : 400,
     alignSelf: "center",
     width: "100%",
   },
@@ -321,14 +332,14 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontSize: isMobile ? 28 : 32,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#8b5a8c",
     marginBottom: 8,
     textAlign: "center",
   },
   subtitle: {
-    fontSize: isMobile ? 16 : 18,
+    fontSize: 16,
     color: "#a569a6",
     textAlign: "center",
     lineHeight: 24,
@@ -336,7 +347,7 @@ const styles = StyleSheet.create({
   form: {
     backgroundColor: "white",
     borderRadius: 20,
-    padding: isMobile ? 24 : 32,
+    padding: 24,
     shadowColor: "#f4c2c2",
     shadowOffset: {
       width: 0,
@@ -361,15 +372,15 @@ const styles = StyleSheet.create({
     borderColor: "#f4c2c2",
     borderRadius: 12,
     paddingHorizontal: 16,
-    paddingVertical: isMobile ? 14 : 16,
+    paddingVertical: 14,
     fontSize: 16,
     color: "#333",
-    minHeight: isMobile ? 48 : 52,
+    minHeight: 48,
   },
   submitButton: {
     backgroundColor: "#f8bbd9",
     borderRadius: 12,
-    paddingVertical: isMobile ? 16 : 18,
+    paddingVertical: 16,
     alignItems: "center",
     marginTop: 10,
     shadowColor: "#f4c2c2",
@@ -388,7 +399,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "white",
-    fontSize: isMobile ? 16 : 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   toggleContainer: {

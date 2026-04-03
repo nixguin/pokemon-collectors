@@ -10,7 +10,10 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
+  ScrollView,
+  useWindowDimensions,
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import { cacheService } from "./src/services/cacheService";
@@ -294,6 +297,9 @@ const TrainerCard = ({
   isAlreadyHave,
   onToggleAlreadyHave,
 }) => {
+  const { width: cardWindowWidth } = useWindowDimensions();
+  const isMobileCard = cardWindowWidth < 768;
+
   const cardData =
     card.extendedData?.reduce((acc, data) => {
       acc[data.name] = data.value;
@@ -308,7 +314,15 @@ const TrainerCard = ({
   const price = cardData.Price || "N/A";
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        {
+          maxWidth: isMobileCard ? cardWindowWidth / 2 - 16 : 180,
+          minHeight: isMobileCard ? 320 : 380,
+        },
+      ]}
+    >
       <Image
         source={{
           uri:
@@ -409,6 +423,11 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Responsive layout
+  const { width: windowWidth } = useWindowDimensions();
+  const isResponsive = windowWidth < 768;
+  const numColumns = isResponsive ? 2 : 3;
 
   // Chat state - moved to top level
   const [chatMessages, setChatMessages] = useState([
@@ -743,133 +762,143 @@ export default function App() {
 
   if (currentView === "wishlist") {
     return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => setCurrentView("home")}>
-            <Text style={styles.backButton}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            My Wishlist ({wishlist.length})
-          </Text>
-          <View style={styles.headerButtons}>
-            <TouchableOpacity
-              onPress={() => setCurrentView("chat")}
-              style={styles.headerButton}
-            >
-              <Text style={styles.headerButtonText}>💬 Chat</Text>
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <SafeAreaView style={styles.header} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")}>
+              <Text style={styles.backButton}>← Back</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                try {
-                  // Save to per-user storage (primary)
-                  const result = await authService.saveWishlist(wishlist);
-                  // Also sync to local wishlistDb as backup
-                  await wishlistDb.clearWishlist();
-                  await Promise.all(
-                    wishlist.map((card) => wishlistDb.addToWishlist(card)),
-                  );
-                  if (result.success) {
-                    Alert.alert("Saved!", "Wishlist saved to your account");
-                  } else {
-                    Alert.alert(
-                      "Warning",
-                      "Saved locally but account sync failed. Your data is safe.",
-                    );
-                  }
-                } catch (error) {
-                  Alert.alert("Error", "Failed to save wishlist");
-                }
-              }}
-              style={styles.headerButton}
-            >
-              <Text style={styles.headerButtonText}>💾 Save</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {wishlist.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>Your wishlist is empty</Text>
-            <Text style={styles.emptyText}>
-              Start adding trainer cards to see them here!
+            <Text style={styles.headerTitle}>
+              My Wishlist ({wishlist.length})
             </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={wishlist}
-            renderItem={({ item }) => (
-              <View
-                style={isAlreadyHave(item) ? styles.ownedCardContainer : null}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.headerButtons}
+            >
+              <TouchableOpacity
+                onPress={() => setCurrentView("chat")}
+                style={styles.headerButton}
               >
-                <TrainerCard
-                  card={item}
-                  isInWishlist={true}
-                  onToggleWishlist={toggleWishlist}
-                  isAlreadyHave={isAlreadyHave(item)}
-                  onToggleAlreadyHave={toggleAlreadyHave}
-                />
-                {isAlreadyHave(item) && (
-                  <View style={styles.ownedBadge}>
-                    <Text style={styles.ownedBadgeText}>✅ OWNED</Text>
-                  </View>
-                )}
-              </View>
-            )}
-            keyExtractor={(item, index) =>
-              `wishlist-${item.productId}-${index}`
-            }
-            numColumns={isMobile ? 2 : 3}
-            contentContainerStyle={{ padding: 8 }}
-          />
-        )}
-      </View>
+                <Text style={styles.headerButtonText}>💬 Chat</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={async () => {
+                  try {
+                    // Save to per-user storage (primary)
+                    const result = await authService.saveWishlist(wishlist);
+                    // Also sync to local wishlistDb as backup
+                    await wishlistDb.clearWishlist();
+                    await Promise.all(
+                      wishlist.map((card) => wishlistDb.addToWishlist(card)),
+                    );
+                    if (result.success) {
+                      Alert.alert("Saved!", "Wishlist saved to your account");
+                    } else {
+                      Alert.alert(
+                        "Warning",
+                        "Saved locally but account sync failed. Your data is safe.",
+                      );
+                    }
+                  } catch (error) {
+                    Alert.alert("Error", "Failed to save wishlist");
+                  }
+                }}
+                style={styles.headerButton}
+              >
+                <Text style={styles.headerButtonText}>💾 Save</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </SafeAreaView>
+
+          {wishlist.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyTitle}>Your wishlist is empty</Text>
+              <Text style={styles.emptyText}>
+                Start adding trainer cards to see them here!
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={wishlist}
+              renderItem={({ item }) => (
+                <View
+                  style={isAlreadyHave(item) ? styles.ownedCardContainer : null}
+                >
+                  <TrainerCard
+                    card={item}
+                    isInWishlist={true}
+                    onToggleWishlist={toggleWishlist}
+                    isAlreadyHave={isAlreadyHave(item)}
+                    onToggleAlreadyHave={toggleAlreadyHave}
+                  />
+                  {isAlreadyHave(item) && (
+                    <View style={styles.ownedBadge}>
+                      <Text style={styles.ownedBadgeText}>✅ OWNED</Text>
+                    </View>
+                  )}
+                </View>
+              )}
+              keyExtractor={(item, index) =>
+                `wishlist-${item.productId}-${index}`
+              }
+              numColumns={numColumns}
+              key={`wishlist-${numColumns}`}
+              contentContainerStyle={{ padding: 8 }}
+            />
+          )}
+        </View>
+      </SafeAreaProvider>
     );
   }
 
   if (currentView === "collection") {
     return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => setCurrentView("home")}>
-            <Text style={styles.backButton}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            My Collection ({alreadyHave.length})
-          </Text>
-          <TouchableOpacity onPress={() => setCurrentView("chat")}>
-            <Text style={styles.chatButton}>💬</Text>
-          </TouchableOpacity>
-        </View>
-
-        {alreadyHave.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>Your collection is empty</Text>
-            <Text style={styles.emptyText}>
-              Start marking cards as owned to see them here!
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <SafeAreaView style={styles.header} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")}>
+              <Text style={styles.backButton}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>
+              My Collection ({alreadyHave.length})
             </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={alreadyHave}
-            renderItem={({ item }) => (
-              <TrainerCard
-                card={item}
-                isInWishlist={isInWishlist(item)}
-                onToggleWishlist={toggleWishlist}
-                isAlreadyHave={true}
-                onToggleAlreadyHave={toggleAlreadyHave}
-              />
-            )}
-            keyExtractor={(item, index) =>
-              `collection-${item.productId}-${index}`
-            }
-            numColumns={isMobile ? 2 : 3}
-            contentContainerStyle={{ padding: 8 }}
-          />
-        )}
-      </View>
+            <TouchableOpacity onPress={() => setCurrentView("chat")}>
+              <Text style={styles.chatButton}>💬</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+
+          {alreadyHave.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyTitle}>Your collection is empty</Text>
+              <Text style={styles.emptyText}>
+                Start marking cards as owned to see them here!
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={alreadyHave}
+              renderItem={({ item }) => (
+                <TrainerCard
+                  card={item}
+                  isInWishlist={isInWishlist(item)}
+                  onToggleWishlist={toggleWishlist}
+                  isAlreadyHave={true}
+                  onToggleAlreadyHave={toggleAlreadyHave}
+                />
+              )}
+              keyExtractor={(item, index) =>
+                `collection-${item.productId}-${index}`
+              }
+              numColumns={numColumns}
+              key={`collection-${numColumns}`}
+              contentContainerStyle={{ padding: 8 }}
+            />
+          )}
+        </View>
+      </SafeAreaProvider>
     );
   }
 
@@ -1044,438 +1073,473 @@ export default function App() {
 
   if (currentView === "chat") {
     return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => setCurrentView("home")}>
-            <Text style={styles.backButton}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>AI Assistant</Text>
-          <View style={{ width: 40 }} />
-        </View>
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <SafeAreaView style={styles.header} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")}>
+              <Text style={styles.backButton}>← Back</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>AI Assistant</Text>
+            <View style={{ width: 40 }} />
+          </SafeAreaView>
 
-        <FlatList
-          data={chatMessages}
-          renderItem={renderChatMessage}
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.chatContainer}
-        />
-
-        <View style={styles.chatInputContainer}>
-          <TextInput
-            value={chatInput}
-            onChangeText={setChatInput}
-            placeholder="Ask about trainer cards..."
-            style={styles.chatInput}
+          <FlatList
+            data={chatMessages}
+            renderItem={renderChatMessage}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.chatContainer}
           />
-          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-            <Text style={styles.sendButtonText}>Send</Text>
-          </TouchableOpacity>
+
+          <SafeAreaView edges={["bottom"]} style={styles.chatInputContainer}>
+            <TextInput
+              value={chatInput}
+              onChangeText={setChatInput}
+              placeholder="Ask about trainer cards..."
+              style={styles.chatInput}
+            />
+            <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+              <Text style={styles.sendButtonText}>Send</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </View>
-      </View>
+      </SafeAreaProvider>
     );
   }
 
   // Show loading while checking authentication
   if (authLoading) {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
-      >
-        <ActivityIndicator size="large" color="#f8bbd9" />
-        <Text style={[styles.loadingStatus, { marginTop: 16 }]}>
-          🌸 Loading your Pokemon collection...
-        </Text>
-      </View>
+      <SafeAreaProvider>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
+        >
+          <ActivityIndicator size="large" color="#f8bbd9" />
+          <Text style={[styles.loadingStatus, { marginTop: 16 }]}>
+            🌸 Loading your Pokemon collection...
+          </Text>
+        </View>
+      </SafeAreaProvider>
     );
   }
 
   // Show login screen if not authenticated
   if (!isAuthenticated) {
-    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+    return (
+      <SafeAreaProvider>
+        <LoginScreen onLoginSuccess={handleLoginSuccess} />
+      </SafeAreaProvider>
+    );
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>
-            {cardSection === "all" ? "All Pokemon Cards" : "Trainer Cards"}
-          </Text>
-          <Text style={styles.cacheStatus}>📊 Local Data Loaded</Text>
-        </View>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            onPress={loadRealPokemonData}
-            style={[
-              styles.headerButton,
-              {
-                backgroundColor: loading
-                  ? "rgba(255,255,255,0.1)"
-                  : "rgba(255,255,255,0.2)",
-              },
-            ]}
-            disabled={loading}
-          >
-            <Text style={styles.headerButtonText}>
-              {loading ? "🔄 Loading..." : "🔄 Refresh"}
+        {/* Header */}
+        <SafeAreaView style={styles.header} edges={["top"]}>
+          <View style={styles.headerTitleContainer}>
+            <Text style={styles.headerTitle}>
+              {cardSection === "all" ? "All Pokemon Cards" : "Trainer Cards"}
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setCurrentView("wishlist")}
-            style={styles.headerButton}
-          >
-            <Text style={styles.headerButtonText}>
-              ❤️ Wishlist ({wishlist.length})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setCurrentView("collection")}
-            style={styles.headerButton}
-          >
-            <Text style={styles.headerButtonText}>
-              📦 Collection ({alreadyHave.length})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setCurrentView("chat")}
-            style={styles.headerButton}
-          >
-            <Text style={styles.headerButtonText}>💬 AI Chat</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleLogout}
-            style={[
-              styles.headerButton,
-              { backgroundColor: "rgba(255,255,255,0.15)" },
-            ]}
-          >
-            <Text style={styles.headerButtonText}>👋 Logout</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* User Info */}
-        {currentUser && (
-          <View style={styles.userInfo}>
-            <Text style={styles.userInfoText}>
-              👤 Welcome, {currentUser.username}!
-            </Text>
+            <Text style={styles.cacheStatus}>📊 Local Data Loaded</Text>
           </View>
-        )}
-      </View>
-
-      {/* Section Switcher */}
-      <View style={styles.sectionSwitcher}>
-        <TouchableOpacity
-          onPress={() => setCardSection("trainers")}
-          style={[
-            styles.sectionButton,
-            {
-              backgroundColor:
-                cardSection === "trainers" ? "#f8bbd9" : "#f9fafb",
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.sectionButtonText,
-              { color: cardSection === "trainers" ? "white" : "#6b7280" },
-            ]}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.headerButtons}
           >
-            🎯 Trainer Cards ({trainerCards.length})
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setCardSection("all")}
-          style={[
-            styles.sectionButton,
-            { backgroundColor: cardSection === "all" ? "#f8bbd9" : "#f9fafb" },
-          ]}
-        >
-          <Text
-            style={[
-              styles.sectionButtonText,
-              { color: cardSection === "all" ? "white" : "#6b7280" },
-            ]}
-          >
-            🃏 All Pokemon Cards ({allPokemonCards.length})
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Search */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={`Search ${
-            cardSection === "all" ? "Pokemon" : "trainer"
-          } cards...`}
-          style={styles.searchInput}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery("")}>
-            <Text style={styles.clearButton}>✕</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Filters */}
-      <View style={styles.filtersContainer}>
-        <Text style={styles.filterLabel}>Rarity:</Text>
-        <TouchableOpacity
-          onPress={() =>
-            setSelectedRarity(
-              selectedRarity === "all"
-                ? "rare"
-                : selectedRarity === "rare"
-                  ? "ultra rare"
-                  : selectedRarity === "ultra rare"
-                    ? "secret rare"
-                    : selectedRarity === "secret rare"
-                      ? "hyper rare"
-                      : selectedRarity === "hyper rare"
-                        ? "rainbow rare"
-                        : selectedRarity === "rainbow rare"
-                          ? "gold rare"
-                          : "all",
-            )
-          }
-          style={[
-            styles.filterButton,
-            {
-              backgroundColor: selectedRarity !== "all" ? "#f8bbd9" : "#f9fafb",
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.filterButtonText,
-              { color: selectedRarity !== "all" ? "white" : "#6b7280" },
-            ]}
-          >
-            {selectedRarity === "all"
-              ? "All Rarities"
-              : selectedRarity.charAt(0).toUpperCase() +
-                selectedRarity.slice(1)}
-          </Text>
-        </TouchableOpacity>
-
-        {selectedRarity !== "all" && (
-          <>
             <TouchableOpacity
-              onPress={() => setShowAdvancedRarity(!showAdvancedRarity)}
+              onPress={loadRealPokemonData}
               style={[
-                styles.filterButton,
-                { backgroundColor: showAdvancedRarity ? "#f8bbd9" : "#f0f0f0" },
+                styles.headerButton,
+                {
+                  backgroundColor: loading
+                    ? "rgba(255,255,255,0.1)"
+                    : "rgba(255,255,255,0.2)",
+                },
               ]}
+              disabled={loading}
             >
-              <Text
-                style={[
-                  styles.filterButtonText,
-                  { color: showAdvancedRarity ? "white" : "#6b7280" },
-                ]}
-              >
-                ⚙️ Advanced
+              <Text style={styles.headerButtonText}>
+                {loading ? "🔄 Loading..." : "🔄 Refresh"}
               </Text>
             </TouchableOpacity>
 
-            {showAdvancedRarity && (
-              <>
-                <TouchableOpacity
-                  onPress={() => setRarityFilter("exact")}
-                  style={[
-                    styles.filterButton,
-                    {
-                      backgroundColor:
-                        rarityFilter === "exact" ? "#f8bbd9" : "#f0f0f0",
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.filterButtonText,
-                      { color: rarityFilter === "exact" ? "white" : "#6b7280" },
-                    ]}
-                  >
-                    = Exact
-                  </Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setCurrentView("wishlist")}
+              style={styles.headerButton}
+            >
+              <Text style={styles.headerButtonText}>
+                ❤️ Wishlist ({wishlist.length})
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setCurrentView("collection")}
+              style={styles.headerButton}
+            >
+              <Text style={styles.headerButtonText}>
+                📦 Collection ({alreadyHave.length})
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setCurrentView("chat")}
+              style={styles.headerButton}
+            >
+              <Text style={styles.headerButtonText}>💬 AI Chat</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={[
+                styles.headerButton,
+                { backgroundColor: "rgba(255,255,255,0.15)" },
+              ]}
+            >
+              <Text style={styles.headerButtonText}>👋 Logout</Text>
+            </TouchableOpacity>
+          </ScrollView>
 
-                <TouchableOpacity
-                  onPress={() => setRarityFilter("higher")}
+          {/* User Info */}
+          {currentUser && (
+            <View style={styles.userInfo}>
+              <Text style={styles.userInfoText}>
+                👤 Welcome, {currentUser.username}!
+              </Text>
+            </View>
+          )}
+        </SafeAreaView>
+
+        {/* Section Switcher */}
+        <View style={styles.sectionSwitcher}>
+          <TouchableOpacity
+            onPress={() => setCardSection("trainers")}
+            style={[
+              styles.sectionButton,
+              {
+                backgroundColor:
+                  cardSection === "trainers" ? "#f8bbd9" : "#f9fafb",
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.sectionButtonText,
+                { color: cardSection === "trainers" ? "white" : "#6b7280" },
+              ]}
+            >
+              🎯 Trainer Cards ({trainerCards.length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setCardSection("all")}
+            style={[
+              styles.sectionButton,
+              {
+                backgroundColor: cardSection === "all" ? "#f8bbd9" : "#f9fafb",
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.sectionButtonText,
+                { color: cardSection === "all" ? "white" : "#6b7280" },
+              ]}
+            >
+              🃏 All Pokemon Cards ({allPokemonCards.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Search */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder={`Search ${
+              cardSection === "all" ? "Pokemon" : "trainer"
+            } cards...`}
+            style={styles.searchInput}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")}>
+              <Text style={styles.clearButton}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Filters */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtersContainer}
+          contentContainerStyle={styles.filtersContainerInner}
+        >
+          <Text style={styles.filterLabel}>Rarity:</Text>
+          <TouchableOpacity
+            onPress={() =>
+              setSelectedRarity(
+                selectedRarity === "all"
+                  ? "rare"
+                  : selectedRarity === "rare"
+                    ? "ultra rare"
+                    : selectedRarity === "ultra rare"
+                      ? "secret rare"
+                      : selectedRarity === "secret rare"
+                        ? "hyper rare"
+                        : selectedRarity === "hyper rare"
+                          ? "rainbow rare"
+                          : selectedRarity === "rainbow rare"
+                            ? "gold rare"
+                            : "all",
+              )
+            }
+            style={[
+              styles.filterButton,
+              {
+                backgroundColor:
+                  selectedRarity !== "all" ? "#f8bbd9" : "#f9fafb",
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                { color: selectedRarity !== "all" ? "white" : "#6b7280" },
+              ]}
+            >
+              {selectedRarity === "all"
+                ? "All Rarities"
+                : selectedRarity.charAt(0).toUpperCase() +
+                  selectedRarity.slice(1)}
+            </Text>
+          </TouchableOpacity>
+
+          {selectedRarity !== "all" && (
+            <>
+              <TouchableOpacity
+                onPress={() => setShowAdvancedRarity(!showAdvancedRarity)}
+                style={[
+                  styles.filterButton,
+                  {
+                    backgroundColor: showAdvancedRarity ? "#f8bbd9" : "#f0f0f0",
+                  },
+                ]}
+              >
+                <Text
                   style={[
-                    styles.filterButton,
-                    {
-                      backgroundColor:
-                        rarityFilter === "higher" ? "#f8bbd9" : "#f0f0f0",
-                    },
+                    styles.filterButtonText,
+                    { color: showAdvancedRarity ? "white" : "#6b7280" },
                   ]}
                 >
-                  <Text
+                  ⚙️ Advanced
+                </Text>
+              </TouchableOpacity>
+
+              {showAdvancedRarity && (
+                <>
+                  <TouchableOpacity
+                    onPress={() => setRarityFilter("exact")}
                     style={[
-                      styles.filterButtonText,
+                      styles.filterButton,
                       {
-                        color: rarityFilter === "higher" ? "white" : "#6b7280",
+                        backgroundColor:
+                          rarityFilter === "exact" ? "#f8bbd9" : "#f0f0f0",
                       },
                     ]}
                   >
-                    ≥ Higher
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={[
+                        styles.filterButtonText,
+                        {
+                          color: rarityFilter === "exact" ? "white" : "#6b7280",
+                        },
+                      ]}
+                    >
+                      = Exact
+                    </Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => setRarityFilter("lower")}
-                  style={[
-                    styles.filterButton,
-                    {
-                      backgroundColor:
-                        rarityFilter === "lower" ? "#f8bbd9" : "#f0f0f0",
-                    },
-                  ]}
-                >
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => setRarityFilter("higher")}
                     style={[
-                      styles.filterButtonText,
-                      { color: rarityFilter === "lower" ? "white" : "#6b7280" },
+                      styles.filterButton,
+                      {
+                        backgroundColor:
+                          rarityFilter === "higher" ? "#f8bbd9" : "#f0f0f0",
+                      },
                     ]}
                   >
-                    ≤ Lower
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </>
-        )}
+                    <Text
+                      style={[
+                        styles.filterButtonText,
+                        {
+                          color:
+                            rarityFilter === "higher" ? "white" : "#6b7280",
+                        },
+                      ]}
+                    >
+                      ≥ Higher
+                    </Text>
+                  </TouchableOpacity>
 
-        <Text style={styles.filterLabel}>Type:</Text>
-        <TouchableOpacity
-          onPress={() =>
-            setSelectedType(
-              selectedType === "all"
-                ? "pokemon"
-                : selectedType === "pokemon"
-                  ? "trainer"
-                  : selectedType === "trainer"
-                    ? "energy"
-                    : "all",
-            )
-          }
-          style={[
-            styles.filterButton,
-            { backgroundColor: selectedType !== "all" ? "#f8bbd9" : "#f9fafb" },
-          ]}
-        >
-          <Text
+                  <TouchableOpacity
+                    onPress={() => setRarityFilter("lower")}
+                    style={[
+                      styles.filterButton,
+                      {
+                        backgroundColor:
+                          rarityFilter === "lower" ? "#f8bbd9" : "#f0f0f0",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.filterButtonText,
+                        {
+                          color: rarityFilter === "lower" ? "white" : "#6b7280",
+                        },
+                      ]}
+                    >
+                      ≤ Lower
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </>
+          )}
+
+          <Text style={styles.filterLabel}>Type:</Text>
+          <TouchableOpacity
+            onPress={() =>
+              setSelectedType(
+                selectedType === "all"
+                  ? "pokemon"
+                  : selectedType === "pokemon"
+                    ? "trainer"
+                    : selectedType === "trainer"
+                      ? "energy"
+                      : "all",
+              )
+            }
             style={[
-              styles.filterButtonText,
-              { color: selectedType !== "all" ? "white" : "#6b7280" },
+              styles.filterButton,
+              {
+                backgroundColor: selectedType !== "all" ? "#f8bbd9" : "#f9fafb",
+              },
             ]}
           >
-            {selectedType === "all"
-              ? "All Types"
-              : selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedRarity("all");
-            setSelectedType("all");
-            setSearchQuery("");
-            setRarityFilter("exact");
-            setShowAdvancedRarity(false);
-          }}
-          style={[styles.filterButton, { backgroundColor: "#f8bbd9" }]}
-        >
-          <Text style={[styles.filterButtonText, { color: "white" }]}>
-            Clear Filters
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Results */}
-      <View style={styles.resultsContainer}>
-        <Text style={styles.resultsText}>
-          {loading
-            ? "Loading..."
-            : `${filteredCards.length} ${
-                cardSection === "all" ? "Pokemon" : "trainer"
-              } cards found`}
-        </Text>
-        {(selectedRarity !== "all" || selectedType !== "all") && (
-          <Text style={styles.filterIndicator}>
-            Filtered by:{" "}
-            {selectedRarity !== "all" &&
-              (rarityFilter === "exact"
-                ? selectedRarity
-                : rarityFilter === "higher"
-                  ? `≥ ${selectedRarity}`
-                  : `≤ ${selectedRarity}`)}{" "}
-            {selectedType !== "all" && selectedType}
-          </Text>
-        )}
-        {cardSection === "trainers" && loading && (
-          <Text style={styles.loadingStatus}>📥 Loading trainer cards...</Text>
-        )}
-        {loading && (
-          <View style={styles.loadingIndicator}>
-            <ActivityIndicator size="small" color="#f8bbd9" />
-            <Text style={styles.loadingText}>
-              Loading real data from TCGCSV...
+            <Text
+              style={[
+                styles.filterButtonText,
+                { color: selectedType !== "all" ? "white" : "#6b7280" },
+              ]}
+            >
+              {selectedType === "all"
+                ? "All Types"
+                : selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}
             </Text>
-          </View>
-        )}
-      </View>
+          </TouchableOpacity>
 
-      {/* Card Grid */}
-      <FlatList
-        data={filteredCards}
-        renderItem={renderCard}
-        keyExtractor={(item, index) =>
-          `${item.productId}-${index}-${cardSection}`
-        }
-        numColumns={isMobile ? 2 : 3}
-        key={`${cardSection}-${filteredCards.length}`}
-        contentContainerStyle={{
-          padding: 16,
-          alignItems: "stretch",
-          justifyContent: "center",
-        }}
-        columnWrapperStyle={{
-          justifyContent: "space-evenly",
-          marginBottom: 16,
-        }}
-        onEndReached={() => {
-          if (
-            cardSection === "all" &&
-            !loadingMore &&
-            allPokemonCards.length > 0
-          ) {
-            loadMoreCards();
-          }
-        }}
-        onEndReachedThreshold={0.3}
-        maxToRenderPerBatch={10}
-        windowSize={10}
-        removeClippedSubviews={true}
-        ListFooterComponent={
-          loadingMore && (
-            <View style={styles.autoLoadingContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedRarity("all");
+              setSelectedType("all");
+              setSearchQuery("");
+              setRarityFilter("exact");
+              setShowAdvancedRarity(false);
+            }}
+            style={[styles.filterButton, { backgroundColor: "#f8bbd9" }]}
+          >
+            <Text style={[styles.filterButtonText, { color: "white" }]}>
+              Clear Filters
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Results */}
+        <View style={styles.resultsContainer}>
+          <Text style={styles.resultsText}>
+            {loading
+              ? "Loading..."
+              : `${filteredCards.length} ${
+                  cardSection === "all" ? "Pokemon" : "trainer"
+                } cards found`}
+          </Text>
+          {(selectedRarity !== "all" || selectedType !== "all") && (
+            <Text style={styles.filterIndicator}>
+              Filtered by:{" "}
+              {selectedRarity !== "all" &&
+                (rarityFilter === "exact"
+                  ? selectedRarity
+                  : rarityFilter === "higher"
+                    ? `≥ ${selectedRarity}`
+                    : `≤ ${selectedRarity}`)}{" "}
+              {selectedType !== "all" && selectedType}
+            </Text>
+          )}
+          {cardSection === "trainers" && loading && (
+            <Text style={styles.loadingStatus}>
+              📥 Loading trainer cards...
+            </Text>
+          )}
+          {loading && (
+            <View style={styles.loadingIndicator}>
               <ActivityIndicator size="small" color="#f8bbd9" />
-              <Text style={styles.autoLoadingText}>Loading more cards...</Text>
+              <Text style={styles.loadingText}>
+                Loading real data from TCGCSV...
+              </Text>
             </View>
-          )
-        }
-      />
-    </View>
+          )}
+        </View>
+
+        {/* Card Grid */}
+        <FlatList
+          data={filteredCards}
+          renderItem={renderCard}
+          keyExtractor={(item, index) =>
+            `${item.productId}-${index}-${cardSection}`
+          }
+          numColumns={numColumns}
+          key={`${cardSection}-${numColumns}`}
+          contentContainerStyle={{
+            padding: 16,
+            alignItems: "stretch",
+            justifyContent: "center",
+          }}
+          columnWrapperStyle={{
+            justifyContent: "space-evenly",
+            marginBottom: 16,
+          }}
+          onEndReached={() => {
+            if (
+              cardSection === "all" &&
+              !loadingMore &&
+              allPokemonCards.length > 0
+            ) {
+              loadMoreCards();
+            }
+          }}
+          onEndReachedThreshold={0.3}
+          maxToRenderPerBatch={10}
+          windowSize={10}
+          removeClippedSubviews={true}
+          ListFooterComponent={
+            loadingMore && (
+              <View style={styles.autoLoadingContainer}>
+                <ActivityIndicator size="small" color="#f8bbd9" />
+                <Text style={styles.autoLoadingText}>
+                  Loading more cards...
+                </Text>
+              </View>
+            )
+          }
+        />
+      </View>
+    </SafeAreaProvider>
   );
 }
 
@@ -1486,16 +1550,13 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#f8bbd9",
-    paddingTop: isMobile ? 40 : 50,
     paddingHorizontal: isMobile ? 12 : 20,
     paddingBottom: isMobile ? 16 : 20,
-    flexDirection: isMobile ? "column" : "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: "column",
   },
   headerTitleContainer: {
-    flex: 1,
     alignItems: "center",
+    marginBottom: 8,
   },
   headerTitle: {
     color: "white",
@@ -1509,23 +1570,21 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   headerButtons: {
-    flexDirection: isMobile ? "column" : "row",
-    marginTop: isMobile ? 12 : 0,
+    flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 4,
   },
   headerButton: {
     backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: isMobile ? 10 : 12,
-    paddingVertical: isMobile ? 8 : 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 15,
-    marginLeft: isMobile ? 0 : 8,
-    marginTop: isMobile ? 4 : 0,
-    minWidth: isMobile ? 120 : "auto",
+    marginRight: 8,
     alignItems: "center",
   },
   headerButtonText: {
     color: "white",
-    fontSize: isMobile ? 10 : 12,
+    fontSize: 12,
     fontWeight: "600",
   },
   userInfo: {
@@ -1625,13 +1684,15 @@ const styles = StyleSheet.create({
   },
   filtersContainer: {
     backgroundColor: "white",
+    borderBottomWidth: 2,
+    borderBottomColor: "#f4c2c2",
+    maxHeight: 56,
+  },
+  filtersContainerInner: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 2,
-    borderBottomColor: "#f4c2c2",
-    flexWrap: "wrap",
   },
   filterLabel: {
     fontSize: 14,
