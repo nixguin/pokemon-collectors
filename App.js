@@ -12,6 +12,8 @@ import {
   Dimensions,
   ScrollView,
   useWindowDimensions,
+  Modal,
+  Platform,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -289,6 +291,189 @@ const demoTrainerCards = [
   },
 ];
 
+// Card Detail Modal — full product page like Collectr
+const CardDetailModal = ({ card, onClose, isInWishlist, onToggleWishlist, isAlreadyHave, onToggleAlreadyHave }) => {
+  const { width: modalWidth, height: modalHeight } = useWindowDimensions();
+  const isModalMobile = modalWidth < 768;
+
+  if (!card) return null;
+
+  const cardData =
+    card.extendedData?.reduce((acc, d) => { acc[d.name] = d.value; return acc; }, {}) || {};
+
+  const setName = cardData.SetName || card.groupName || "Unknown Set";
+  const cardType = cardData.CardType || "Trainer";
+  const rarity = cardData.Rarity || "Common";
+  const cardNumber = cardData.Number || "";
+  const price = cardData.Price;
+  const priceDisplay = price && price !== "N/A" ? `$${parseFloat(price).toFixed(2)}` : "N/A";
+
+  const rarityColor =
+    rarity.toLowerCase().includes("ultra") ? "#f59e0b" :
+    rarity.toLowerCase().includes("secret") || rarity.toLowerCase().includes("hyper") ? "#a78bfa" :
+    rarity.toLowerCase().includes("uncommon") ? "#34d399" : "#9ca3af";
+
+  const ebaySearch = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(card.name + " pokemon card")}`;
+  const tcgSearch = `https://www.tcgplayer.com/search/pokemon/product?productLineName=pokemon&q=${encodeURIComponent(card.name)}`;
+
+  return (
+    <Modal
+      visible={!!card}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      {/* Backdrop */}
+      <TouchableOpacity
+        style={[
+          styles.modalBackdrop,
+          isModalMobile && { padding: 0, justifyContent: "flex-end" },
+        ]}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[
+            styles.modalContainer,
+            isModalMobile && {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              padding: 20,
+              maxHeight: modalHeight * 0.92,
+              width: "100%",
+            },
+          ]}
+          onPress={() => {}}
+        >
+          {/* Close button */}
+          <TouchableOpacity style={styles.modalCloseBtn} onPress={onClose}>
+            <Text style={styles.modalCloseBtnText}>✕</Text>
+          </TouchableOpacity>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Mobile drag handle */}
+            {isModalMobile && <View style={styles.modalDragHandle} />}
+
+            {/* Header: name + meta */}
+            <Text style={styles.modalCardName}>{card.name}</Text>
+            <Text style={styles.modalCardMeta}>
+              {setName}{cardNumber ? ` • ${cardNumber}` : ""}
+            </Text>
+            <View style={styles.modalRarityRow}>
+              <Text style={[styles.modalRarityBadge, { color: rarityColor }]}>{rarity}</Text>
+              {cardType && (
+                <Text style={styles.modalTypeBadge}>{cardType}</Text>
+              )}
+            </View>
+
+            {/* Body: image + details side by side on wide screens */}
+            <View style={[styles.modalBody, { flexDirection: isModalMobile ? "column" : "row" }]}>
+              {/* Card Image */}
+              <View style={[styles.modalImageSection, isModalMobile && { marginBottom: 16 }]}>
+                <Image
+                  source={{
+                    uri: card.imageUrl ||
+                      "https://via.placeholder.com/300x420/fce7f3/ec4899?text=No+Image",
+                  }}
+                  style={[
+                    styles.modalCardImage,
+                    {
+                      width: isModalMobile ? modalWidth * 0.45 : 260,
+                      height: isModalMobile ? modalWidth * 0.63 : 364,
+                    },
+                  ]}
+                  resizeMode="contain"
+                />
+              </View>
+
+              {/* Right panel */}
+              <View style={styles.modalInfoSection}>
+                {/* Price */}
+                <View style={styles.modalPriceBox}>
+                  <Text style={styles.modalPriceLabel}>Market Price</Text>
+                  <Text style={styles.modalPriceValue}>{priceDisplay}</Text>
+                </View>
+
+                {/* Actions */}
+                <TouchableOpacity
+                  onPress={() => onToggleWishlist(card)}
+                  style={[styles.modalActionBtn, { backgroundColor: isInWishlist ? "#f43f5e" : "#ec4899" }]}
+                >
+                  <Text style={styles.modalActionBtnText}>
+                    {isInWishlist ? "♥  Remove from Wishlist" : "♡  Add to Wishlist"}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => onToggleAlreadyHave(card)}
+                  style={[styles.modalActionBtn, { backgroundColor: isAlreadyHave ? "#059669" : "#374151", marginTop: 10 }]}
+                >
+                  <Text style={styles.modalActionBtnText}>
+                    {isAlreadyHave ? "✓  In My Collection" : "+  Add to Collection"}
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Details */}
+                <View style={styles.modalDetailsBox}>
+                  <Text style={styles.modalDetailsHeading}>Details</Text>
+                  <View style={styles.modalDetailRow}>
+                    <Text style={styles.modalDetailLabel}>Set</Text>
+                    <Text style={styles.modalDetailValue}>{setName}</Text>
+                  </View>
+                  <View style={styles.modalDetailRow}>
+                    <Text style={styles.modalDetailLabel}>Rarity</Text>
+                    <Text style={[styles.modalDetailValue, { color: rarityColor }]}>{rarity}</Text>
+                  </View>
+                  {cardNumber ? (
+                    <View style={styles.modalDetailRow}>
+                      <Text style={styles.modalDetailLabel}>Card Number</Text>
+                      <Text style={styles.modalDetailValue}>{cardNumber}</Text>
+                    </View>
+                  ) : null}
+                  <View style={styles.modalDetailRow}>
+                    <Text style={styles.modalDetailLabel}>Type</Text>
+                    <Text style={styles.modalDetailValue}>{cardType}</Text>
+                  </View>
+                </View>
+
+                {/* Shop links */}
+                <View style={styles.modalShopBox}>
+                  <Text style={styles.modalDetailsHeading}>Shop</Text>
+                  <TouchableOpacity
+                    style={styles.modalShopRow}
+                    onPress={() => {
+                      if (Platform.OS === "web") {
+                        window.open(tcgSearch, "_blank");
+                      }
+                    }}
+                  >
+                    <Text style={styles.modalShopName}>TCGPlayer</Text>
+                    <Text style={styles.modalShopLink}>View listings →</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.modalShopRow}
+                    onPress={() => {
+                      if (Platform.OS === "web") {
+                        window.open(ebaySearch, "_blank");
+                      }
+                    }}
+                  >
+                    <Text style={styles.modalShopName}>eBay</Text>
+                    <Text style={styles.modalShopLink}>Check latest →</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
 // Card Component — Collectr-inspired dark card design
 const TrainerCard = ({
   card,
@@ -296,6 +481,7 @@ const TrainerCard = ({
   onToggleWishlist,
   isAlreadyHave,
   onToggleAlreadyHave,
+  onPress,
 }) => {
   const cardData =
     card.extendedData?.reduce((acc, data) => {
@@ -322,7 +508,7 @@ const TrainerCard = ({
           : "#9ca3af";
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity activeOpacity={0.9} onPress={onPress} style={styles.card}>
       {/* Card Image */}
       <View style={styles.cardImageWrapper}>
         <Image
@@ -336,7 +522,7 @@ const TrainerCard = ({
         />
         {/* Wishlist badge overlay */}
         <TouchableOpacity
-          onPress={() => onToggleWishlist(card)}
+          onPress={(e) => { e.stopPropagation?.(); onToggleWishlist(card); }}
           style={[
             styles.addButton,
             { backgroundColor: isInWishlist ? "#f43f5e" : "#10b981" },
@@ -368,7 +554,7 @@ const TrainerCard = ({
         <View style={styles.cardFooter}>
           <Text style={styles.cardPrice}>{priceDisplay}</Text>
           <TouchableOpacity
-            onPress={() => onToggleAlreadyHave(card)}
+            onPress={(e) => { e.stopPropagation?.(); onToggleAlreadyHave(card); }}
             style={[
               styles.ownedButton,
               { backgroundColor: isAlreadyHave ? "#059669" : "#374151" },
@@ -380,7 +566,7 @@ const TrainerCard = ({
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -403,6 +589,7 @@ export default function App() {
   const [showAdvancedRarity, setShowAdvancedRarity] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   // User authentication state
   const [currentUser, setCurrentUser] = useState(null);
@@ -716,6 +903,7 @@ export default function App() {
       onToggleWishlist={toggleWishlist}
       isAlreadyHave={isAlreadyHave(item)}
       onToggleAlreadyHave={toggleAlreadyHave}
+      onPress={() => setSelectedCard(item)}
     />
   );
 
@@ -1281,6 +1469,16 @@ export default function App() {
             />
           </View>
         </View>
+
+        {/* ── Card Detail Modal ── */}
+        <CardDetailModal
+          card={selectedCard}
+          onClose={() => setSelectedCard(null)}
+          isInWishlist={selectedCard ? isInWishlist(selectedCard) : false}
+          onToggleWishlist={toggleWishlist}
+          isAlreadyHave={selectedCard ? isAlreadyHave(selectedCard) : false}
+          onToggleAlreadyHave={toggleAlreadyHave}
+        />
       </View>
     </SafeAreaProvider>
   );
@@ -1828,530 +2026,190 @@ const styles = StyleSheet.create({
   ownedCardContainer: {
     opacity: 0.85,
   },
-});
 
-
-  // ── Navbar ──────────────────────────────────────────────
-  navbar: {
-    backgroundColor: "#1e293b",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#334155",
-  },
-  navBrand: {
-    marginRight: 24,
-  },
-  navLogo: {
-    color: "#10b981",
-    fontSize: 16,
-    fontWeight: "900",
-    letterSpacing: 1,
-  },
-  navLogoSub: {
-    color: "#64748b",
-    fontSize: 9,
-    letterSpacing: 0.5,
-    marginTop: 1,
-  },
-  navLinks: {
-    flexDirection: "row",
-    alignItems: "center",
-    flexGrow: 1,
-  },
-  navLink: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    marginRight: 4,
-    borderRadius: 6,
-  },
-  navLinkActive: {
-    backgroundColor: "rgba(16,185,129,0.1)",
-  },
-  navLinkText: {
-    color: "#94a3b8",
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  navLinkTextActive: {
-    color: "#10b981",
-    fontWeight: "700",
-  },
-  navRight: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: "auto",
-  },
-  navUser: {
-    color: "#94a3b8",
-    fontSize: 13,
-    marginRight: 12,
-  },
-  navLogoutBtn: {
-    borderWidth: 1,
-    borderColor: "#475569",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  navLogoutText: {
-    color: "#94a3b8",
-    fontSize: 13,
-  },
-  navBack: {
-    marginRight: 16,
-  },
-  navBackText: {
-    color: "#10b981",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  navTitle: {
-    color: "#f1f5f9",
-    fontSize: 16,
-    fontWeight: "700",
+  // ── Card Detail Modal ────────────────────────────────────
+  modalBackdrop: {
     flex: 1,
-  },
-  navActionBtn: {
-    backgroundColor: "#10b981",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  navActionBtnText: {
-    color: "white",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-
-  // ── Search Section ───────────────────────────────────────
-  searchSection: {
-    backgroundColor: "#1e293b",
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#334155",
-    gap: 10,
+    padding: 16,
   },
-  searchContainer: {
-    flex: 1,
-    backgroundColor: "#0f172a",
-    borderWidth: 1,
-    borderColor: "#334155",
-    borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+  modalContainer: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 24,
+    width: "100%",
+    maxWidth: 780,
+    maxHeight: "90%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
+    elevation: 16,
   },
-  searchIcon: {
-    fontSize: 14,
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: "#f1f5f9",
-  },
-  searchClearBtn: {
-    paddingLeft: 8,
-  },
-  searchClearText: {
-    color: "#64748b",
-    fontSize: 14,
-  },
-  refreshBtn: {
-    backgroundColor: "#10b981",
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 8,
-    minWidth: 80,
-    alignItems: "center",
-  },
-  refreshBtnText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-
-  // ── Sidebar ──────────────────────────────────────────────
-  sidebar: {
-    width: 200,
-    backgroundColor: "#1e293b",
-    borderRightWidth: 1,
-    borderRightColor: "#334155",
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-  },
-  sidebarHeading: {
-    color: "#f1f5f9",
-    fontSize: 14,
-    fontWeight: "700",
+  modalDragHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: "#e5e7eb",
+    borderRadius: 2,
+    alignSelf: "center",
     marginBottom: 16,
-    textTransform: "uppercase",
-    letterSpacing: 1,
   },
-  sidebarLabel: {
-    color: "#94a3b8",
-    fontSize: 12,
+  modalCloseBtn: {
+    position: "absolute",
+    top: 14,
+    right: 14,
+    zIndex: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#f3f4f6",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalCloseBtnText: {
+    color: "#374151",
+    fontSize: 14,
     fontWeight: "700",
+  },
+  modalCardName: {
+    fontSize: 22,
+    fontWeight: "900",
+    color: "#111827",
+    marginBottom: 4,
+    paddingRight: 40,
+  },
+  modalCardMeta: {
+    fontSize: 14,
+    color: "#6b7280",
+    marginBottom: 8,
+  },
+  modalRarityRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
+  modalRarityBadge: {
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  modalTypeBadge: {
+    fontSize: 13,
+    color: "#9ca3af",
+    backgroundColor: "#f3f4f6",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  modalBody: {
+    gap: 24,
+  },
+  modalImageSection: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  modalCardImage: {
+    borderRadius: 10,
+    backgroundColor: "#fdf2f8",
+  },
+  modalInfoSection: {
+    flex: 1,
+    minWidth: 0,
+  },
+  modalPriceBox: {
+    backgroundColor: "#fdf2f8",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#fce7f3",
+  },
+  modalPriceLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#9ca3af",
     textTransform: "uppercase",
     letterSpacing: 0.8,
-    marginBottom: 8,
-    marginTop: 8,
+    marginBottom: 4,
   },
-  sidebarDivider: {
-    height: 1,
-    backgroundColor: "#334155",
-    marginVertical: 12,
+  modalPriceValue: {
+    fontSize: 28,
+    fontWeight: "900",
+    color: "#ec4899",
   },
-  sidebarOption: {
-    flexDirection: "row",
+  modalActionBtn: {
+    paddingVertical: 13,
+    borderRadius: 10,
     alignItems: "center",
-    paddingVertical: 6,
   },
-  sidebarRadio: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    borderWidth: 2,
-    borderColor: "#475569",
-    marginRight: 10,
+  modalActionBtnText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "700",
   },
-  sidebarRadioActive: {
-    borderColor: "#10b981",
-    backgroundColor: "#10b981",
-  },
-  sidebarOptionText: {
-    color: "#cbd5e1",
-    fontSize: 13,
-  },
-  clearFiltersBtn: {
-    marginTop: 8,
-    paddingVertical: 8,
-    borderRadius: 6,
+  modalDetailsBox: {
+    marginTop: 16,
+    backgroundColor: "#f9fafb",
+    borderRadius: 12,
+    padding: 16,
     borderWidth: 1,
-    borderColor: "#475569",
-    alignItems: "center",
+    borderColor: "#e5e7eb",
   },
-  clearFiltersBtnText: {
-    color: "#94a3b8",
-    fontSize: 13,
-  },
-
-  // ── Main Content ─────────────────────────────────────────
-  mainContent: {
-    flex: 1,
-  },
-
-  // Mobile filter chips
-  chipRow: {
-    backgroundColor: "#1e293b",
-    borderBottomWidth: 1,
-    borderBottomColor: "#334155",
-    maxHeight: 48,
-  },
-  chipRowInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 16,
+  modalShopBox: {
+    marginTop: 12,
+    backgroundColor: "#f9fafb",
+    borderRadius: 12,
+    padding: 16,
     borderWidth: 1,
-    borderColor: "#334155",
-    marginRight: 8,
-    backgroundColor: "#0f172a",
+    borderColor: "#e5e7eb",
   },
-  chipActive: {
-    backgroundColor: "rgba(16,185,129,0.15)",
-    borderColor: "#10b981",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 16,
-    marginRight: 8,
-  },
-  chipText: {
-    color: "#94a3b8",
-    fontSize: 12,
-  },
-  chipTextActive: {
-    color: "#10b981",
-    fontSize: 12,
-    fontWeight: "600",
-  },
-
-  // Results bar
-  resultsBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#1e293b",
-  },
-  resultsText: {
-    color: "#94a3b8",
+  modalDetailsHeading: {
     fontSize: 13,
-  },
-  sortRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  sortLabel: {
-    color: "#64748b",
-    fontSize: 13,
-  },
-  sortValue: {
-    color: "#94a3b8",
-    fontSize: 13,
-    fontWeight: "600",
-  },
-
-  // Grid
-  gridContent: {
-    padding: 12,
-  },
-  gridRow: {
-    justifyContent: "flex-start",
+    fontWeight: "800",
+    color: "#374151",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
     marginBottom: 12,
   },
-
-  // ── Card ─────────────────────────────────────────────────
-  card: {
-    backgroundColor: "#1e293b",
-    borderRadius: 12,
-    overflow: "hidden",
-    flex: 1,
-    margin: 6,
-    borderWidth: 1,
-    borderColor: "#334155",
-    maxWidth: isMobile ? width / 2 - 18 : 200,
-  },
-  cardImageWrapper: {
-    backgroundColor: "#0f172a",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    position: "relative",
-  },
-  cardImage: {
-    width: "100%",
-    height: 180,
-    resizeMode: "contain",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 6,
-  },
-  addButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 20,
-  },
-  cardContent: {
-    padding: 12,
-  },
-  cardName: {
-    color: "#f1f5f9",
-    fontSize: 14,
-    fontWeight: "700",
-    marginBottom: 3,
-    lineHeight: 18,
-  },
-  cardSet: {
-    color: "#64748b",
-    fontSize: 11,
-    marginBottom: 6,
-  },
-  cardMeta: {
+  modalDetailRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 4,
-    marginBottom: 8,
-  },
-  rarityBadge: {
-    fontSize: 11,
-    fontWeight: "600",
-  },
-  cardTypeBadge: {
-    color: "#64748b",
-    fontSize: 11,
-  },
-  cardFooter: {
-    flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 4,
+    alignItems: "center",
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
   },
-  cardPrice: {
-    color: "#10b981",
+  modalDetailLabel: {
     fontSize: 13,
-    fontWeight: "700",
-  },
-  ownedButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  ownedButtonText: {
-    color: "white",
-    fontSize: 11,
+    color: "#9ca3af",
     fontWeight: "600",
   },
-
-  // ── Empty state ──────────────────────────────────────────
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 32,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#94a3b8",
-    marginBottom: 8,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: "#64748b",
-    textAlign: "center",
-  },
-
-  // ── Chat ─────────────────────────────────────────────────
-  chatContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: "#0f172a",
-  },
-  chatMessage: {
-    marginVertical: 4,
-    padding: 12,
-    borderRadius: 12,
-    maxWidth: "80%",
-  },
-  botMessage: {
-    backgroundColor: "#1e293b",
-    alignSelf: "flex-start",
-  },
-  userMessage: {
-    backgroundColor: "#10b981",
-    alignSelf: "flex-end",
-  },
-  botText: {
-    color: "#e2e8f0",
-  },
-  userText: {
-    color: "white",
-  },
-  chatInputContainer: {
-    flexDirection: "row",
-    padding: 12,
-    backgroundColor: "#1e293b",
-    borderTopWidth: 1,
-    borderTopColor: "#334155",
-    gap: 8,
-  },
-  chatInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#334155",
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: "#0f172a",
-    color: "#f1f5f9",
-  },
-  sendButton: {
-    backgroundColor: "#10b981",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    justifyContent: "center",
-  },
-  sendButtonText: {
-    color: "white",
+  modalDetailValue: {
+    fontSize: 13,
+    color: "#111827",
     fontWeight: "700",
-  },
-  chatCardsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 8,
-  },
-  chatCard: {
-    width: 80,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  chatCardImage: {
-    width: 80,
-    height: 112,
-    borderRadius: 8,
-    backgroundColor: "#1e293b",
-  },
-  chatCardName: {
-    fontSize: 10,
-    textAlign: "center",
-    marginTop: 4,
-    color: "#94a3b8",
-  },
-
-  // ── Misc ─────────────────────────────────────────────────
-  loadingStatus: {
-    fontSize: 12,
-    color: "#10b981",
-    fontStyle: "italic",
-    marginTop: 4,
-  },
-  autoLoadingContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  autoLoadingText: {
+    flexShrink: 1,
+    textAlign: "right",
     marginLeft: 8,
-    color: "#64748b",
-    fontSize: 14,
   },
-  ownedBadge: {
-    position: "absolute",
-    top: 8,
-    right: 8,
-    backgroundColor: "#10b981",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    elevation: 4,
+  modalShopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
   },
-  ownedBadgeText: {
-    color: "white",
-    fontSize: 10,
+  modalShopName: {
+    fontSize: 13,
+    color: "#374151",
     fontWeight: "700",
   },
-  ownedCardContainer: {
-    opacity: 0.85,
+  modalShopLink: {
+    fontSize: 13,
+    color: "#ec4899",
+    fontWeight: "600",
   },
 });
