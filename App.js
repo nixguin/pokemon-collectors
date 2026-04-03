@@ -412,7 +412,9 @@ export default function App() {
   // Responsive layout
   const { width: windowWidth } = useWindowDimensions();
   const isResponsive = windowWidth < 768;
-  const numColumns = isResponsive ? 2 : 3;
+  // sidebar is 180px wide on desktop; card min ~160px + 10px gap each side
+  const gridWidth = isResponsive ? windowWidth : windowWidth - 180;
+  const numColumns = Math.max(2, Math.floor(gridWidth / 170));
 
   // Chat state - moved to top level
   const [chatMessages, setChatMessages] = useState([
@@ -1062,7 +1064,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-          <ActivityIndicator size="large" color="#10b981" />
+          <ActivityIndicator size="large" color="#ec4899" />
           <Text style={[styles.loadingStatus, { marginTop: 16, fontSize: 14 }]}>
             Loading your collection...
           </Text>
@@ -1288,12 +1290,546 @@ const styles = StyleSheet.create({
   // ── Layout ──────────────────────────────────────────────
   container: {
     flex: 1,
-    backgroundColor: "#0f172a",
+    backgroundColor: "#fdf2f8",
   },
   body: {
     flex: 1,
     flexDirection: "row",
   },
+
+  // ── Navbar ──────────────────────────────────────────────
+  navbar: {
+    backgroundColor: "#f472b6",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ec4899",
+  },
+  navBrand: {
+    marginRight: 24,
+  },
+  navLogo: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "900",
+    letterSpacing: 1,
+  },
+  navLogoSub: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 9,
+    letterSpacing: 0.5,
+    marginTop: 1,
+  },
+  navLinks: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexGrow: 1,
+  },
+  navLink: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    marginRight: 4,
+    borderRadius: 6,
+  },
+  navLinkActive: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+  },
+  navLinkText: {
+    color: "rgba(255,255,255,0.85)",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  navLinkTextActive: {
+    color: "white",
+    fontWeight: "700",
+  },
+  navRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "auto",
+  },
+  navUser: {
+    color: "rgba(255,255,255,0.9)",
+    fontSize: 13,
+    marginRight: 12,
+  },
+  navLogoutBtn: {
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.5)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  navLogoutText: {
+    color: "white",
+    fontSize: 13,
+  },
+  navBack: {
+    marginRight: 16,
+  },
+  navBackText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  navTitle: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+    flex: 1,
+  },
+  navActionBtn: {
+    backgroundColor: "white",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  navActionBtnText: {
+    color: "#ec4899",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+
+  // ── Search Section ───────────────────────────────────────
+  searchSection: {
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#fce7f3",
+    gap: 10,
+  },
+  searchContainer: {
+    flex: 1,
+    backgroundColor: "#fdf2f8",
+    borderWidth: 1.5,
+    borderColor: "#f9a8d4",
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  searchIcon: {
+    fontSize: 14,
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: "#1f2937",
+  },
+  searchClearBtn: {
+    paddingLeft: 8,
+  },
+  searchClearText: {
+    color: "#9ca3af",
+    fontSize: 14,
+  },
+  refreshBtn: {
+    backgroundColor: "#ec4899",
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 8,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  refreshBtnText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+
+  // ── Sidebar ──────────────────────────────────────────────
+  sidebar: {
+    width: 180,
+    backgroundColor: "white",
+    borderRightWidth: 1,
+    borderRightColor: "#fce7f3",
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  sidebarHeading: {
+    color: "#be185d",
+    fontSize: 13,
+    fontWeight: "800",
+    marginBottom: 16,
+    textTransform: "uppercase",
+    letterSpacing: 1.2,
+  },
+  sidebarLabel: {
+    color: "#9ca3af",
+    fontSize: 11,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  sidebarDivider: {
+    height: 1,
+    backgroundColor: "#fce7f3",
+    marginVertical: 12,
+  },
+  sidebarOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 5,
+  },
+  sidebarRadio: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: "#f9a8d4",
+    marginRight: 10,
+  },
+  sidebarRadioActive: {
+    borderColor: "#ec4899",
+    backgroundColor: "#ec4899",
+  },
+  sidebarOptionText: {
+    color: "#374151",
+    fontSize: 13,
+  },
+  clearFiltersBtn: {
+    marginTop: 8,
+    paddingVertical: 8,
+    borderRadius: 6,
+    backgroundColor: "#fce7f3",
+    alignItems: "center",
+  },
+  clearFiltersBtnText: {
+    color: "#be185d",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  // ── Main Content ─────────────────────────────────────────
+  mainContent: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  // Mobile filter chips
+  chipRow: {
+    backgroundColor: "white",
+    borderBottomWidth: 1,
+    borderBottomColor: "#fce7f3",
+    maxHeight: 48,
+  },
+  chipRowInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#f9a8d4",
+    marginRight: 8,
+    backgroundColor: "white",
+  },
+  chipActive: {
+    backgroundColor: "#fce7f3",
+    borderColor: "#ec4899",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  chipText: {
+    color: "#9ca3af",
+    fontSize: 12,
+  },
+  chipTextActive: {
+    color: "#ec4899",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+
+  // Results bar
+  resultsBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: "white",
+    borderBottomWidth: 1,
+    borderBottomColor: "#fce7f3",
+  },
+  resultsText: {
+    color: "#6b7280",
+    fontSize: 13,
+  },
+  sortRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  sortLabel: {
+    color: "#9ca3af",
+    fontSize: 13,
+  },
+  sortValue: {
+    color: "#374151",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  // Grid
+  gridContent: {
+    padding: 10,
+  },
+  gridRow: {
+    justifyContent: "flex-start",
+    marginBottom: 10,
+  },
+
+  // ── Card ─────────────────────────────────────────────────
+  card: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    overflow: "hidden",
+    flex: 1,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: "#fce7f3",
+    shadowColor: "#f472b6",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  cardImageWrapper: {
+    backgroundColor: "#fdf2f8",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    position: "relative",
+  },
+  cardImage: {
+    width: "100%",
+    height: 170,
+    resizeMode: "contain",
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 6,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 20,
+  },
+  cardContent: {
+    padding: 10,
+  },
+  cardName: {
+    color: "#1f2937",
+    fontSize: 13,
+    fontWeight: "700",
+    marginBottom: 2,
+    lineHeight: 17,
+  },
+  cardSet: {
+    color: "#9ca3af",
+    fontSize: 10,
+    marginBottom: 5,
+  },
+  cardMeta: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
+    marginBottom: 6,
+  },
+  rarityBadge: {
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  cardTypeBadge: {
+    color: "#9ca3af",
+    fontSize: 10,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
+  },
+  cardPrice: {
+    color: "#be185d",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  ownedButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  ownedButtonText: {
+    color: "white",
+    fontSize: 11,
+    fontWeight: "600",
+  },
+
+  // ── Empty state ──────────────────────────────────────────
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 32,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#9ca3af",
+    marginBottom: 8,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: "#d1d5db",
+    textAlign: "center",
+  },
+
+  // ── Chat ─────────────────────────────────────────────────
+  chatContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: "#fdf2f8",
+  },
+  chatMessage: {
+    marginVertical: 4,
+    padding: 12,
+    borderRadius: 12,
+    maxWidth: "80%",
+  },
+  botMessage: {
+    backgroundColor: "white",
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: "#fce7f3",
+  },
+  userMessage: {
+    backgroundColor: "#ec4899",
+    alignSelf: "flex-end",
+  },
+  botText: {
+    color: "#374151",
+  },
+  userText: {
+    color: "white",
+  },
+  chatInputContainer: {
+    flexDirection: "row",
+    padding: 12,
+    backgroundColor: "white",
+    borderTopWidth: 1,
+    borderTopColor: "#fce7f3",
+    gap: 8,
+  },
+  chatInput: {
+    flex: 1,
+    borderWidth: 1.5,
+    borderColor: "#f9a8d4",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: "#fdf2f8",
+    color: "#1f2937",
+  },
+  sendButton: {
+    backgroundColor: "#ec4899",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    justifyContent: "center",
+  },
+  sendButtonText: {
+    color: "white",
+    fontWeight: "700",
+  },
+  chatCardsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 8,
+  },
+  chatCard: {
+    width: 80,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  chatCardImage: {
+    width: 80,
+    height: 112,
+    borderRadius: 8,
+    backgroundColor: "#fce7f3",
+  },
+  chatCardName: {
+    fontSize: 10,
+    textAlign: "center",
+    marginTop: 4,
+    color: "#6b7280",
+  },
+
+  // ── Misc ─────────────────────────────────────────────────
+  loadingStatus: {
+    fontSize: 12,
+    color: "#ec4899",
+    fontStyle: "italic",
+    marginTop: 4,
+  },
+  autoLoadingContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  autoLoadingText: {
+    marginLeft: 8,
+    color: "#9ca3af",
+    fontSize: 14,
+  },
+  ownedBadge: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "#10b981",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    elevation: 4,
+  },
+  ownedBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "700",
+  },
+  ownedCardContainer: {
+    opacity: 0.85,
+  },
+});
+
 
   // ── Navbar ──────────────────────────────────────────────
   navbar: {
