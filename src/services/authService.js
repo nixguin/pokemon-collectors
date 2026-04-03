@@ -81,11 +81,15 @@ class AuthService {
       // Supabase Auth uses email, so if username provided, look it up
       let email = username;
       if (!username.includes("@")) {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("email")
           .eq("username", username)
-          .single();
+          .maybeSingle();
+
+        if (profileError) {
+          throw new Error("Error looking up username. Please try again.");
+        }
 
         if (profile) {
           email = profile.email;
@@ -108,7 +112,7 @@ class AuthService {
         .from("profiles")
         .select("username")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
       const appUser = {
         id: user.id,
@@ -155,7 +159,7 @@ class AuthService {
           .from("profiles")
           .select("username")
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
 
         const appUser = {
           id: user.id,
