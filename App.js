@@ -289,7 +289,7 @@ const demoTrainerCards = [
   },
 ];
 
-// Simple Card Component
+// Card Component — Collectr-inspired dark card design
 const TrainerCard = ({
   card,
   isInWishlist,
@@ -297,103 +297,88 @@ const TrainerCard = ({
   isAlreadyHave,
   onToggleAlreadyHave,
 }) => {
-  const { width: cardWindowWidth } = useWindowDimensions();
-  const isMobileCard = cardWindowWidth < 768;
-
   const cardData =
     card.extendedData?.reduce((acc, data) => {
       acc[data.name] = data.value;
       return acc;
     }, {}) || {};
 
-  // Use group name or set name from extended data
   const setName = cardData.SetName || card.groupName || "Unknown Set";
   const cardType = cardData.CardType || "Trainer";
   const rarity = cardData.Rarity || "Common";
   const cardNumber = cardData.Number || "";
-  const price = cardData.Price || "N/A";
+  const price = cardData.Price;
+  const priceDisplay = price && price !== "N/A" ? `$${price}` : "Price TBD";
+
+  const rarityColor =
+    rarity.toLowerCase().includes("rare holo") ||
+    rarity.toLowerCase().includes("ultra")
+      ? "#f59e0b"
+      : rarity.toLowerCase().includes("secret") ||
+          rarity.toLowerCase().includes("hyper")
+        ? "#a78bfa"
+        : rarity.toLowerCase().includes("uncommon")
+          ? "#34d399"
+          : "#9ca3af";
 
   return (
-    <View
-      style={[
-        styles.card,
-        {
-          maxWidth: isMobileCard ? cardWindowWidth / 2 - 16 : 180,
-          minHeight: isMobileCard ? 320 : 380,
-        },
-      ]}
-    >
-      <Image
-        source={{
-          uri:
-            card.imageUrl ||
-            "https://via.placeholder.com/200x280/6b7280/ffffff?text=No+Image",
-        }}
-        style={styles.cardImage}
-        resizeMode="cover"
-      />
+    <View style={styles.card}>
+      {/* Card Image */}
+      <View style={styles.cardImageWrapper}>
+        <Image
+          source={{
+            uri:
+              card.imageUrl ||
+              "https://via.placeholder.com/200x280/1e293b/ffffff?text=No+Image",
+          }}
+          style={styles.cardImage}
+          resizeMode="contain"
+        />
+        {/* Wishlist badge overlay */}
+        <TouchableOpacity
+          onPress={() => onToggleWishlist(card)}
+          style={[
+            styles.addButton,
+            { backgroundColor: isInWishlist ? "#f43f5e" : "#10b981" },
+          ]}
+        >
+          <Text style={styles.addButtonText}>{isInWishlist ? "♥" : "+"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Card Info */}
       <View style={styles.cardContent}>
         <Text style={styles.cardName} numberOfLines={2}>
           {card.name}
         </Text>
         <Text style={styles.cardSet} numberOfLines={1}>
           {setName}
+          {cardNumber ? ` • ${cardNumber}` : ""}
         </Text>
-        <Text style={styles.cardPrice} numberOfLines={1}>
-          💰 ${price !== "N/A" ? price : "Price TBD"}
-        </Text>
-        <View style={styles.cardTags}>
+        <View style={styles.cardMeta}>
+          <Text style={[styles.rarityBadge, { color: rarityColor }]}>
+            {rarity}
+          </Text>
           {cardType && (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>{cardType}</Text>
-            </View>
-          )}
-          {rarity && (
-            <View style={[styles.tag, { backgroundColor: "#fef3c7" }]}>
-              <Text style={[styles.tagText, { color: "#d97706" }]}>
-                {rarity}
-              </Text>
-            </View>
-          )}
-          {cardNumber && (
-            <View style={[styles.tag, { backgroundColor: "#f3f4f6" }]}>
-              <Text style={[styles.tagText, { color: "#374151" }]}>
-                #{cardNumber}
-              </Text>
-            </View>
+            <Text style={styles.cardTypeBadge}>
+              {cardType.split(" - ")[1] || cardType}
+            </Text>
           )}
         </View>
-        <TouchableOpacity
-          onPress={() => onToggleWishlist(card)}
-          style={[
-            styles.wishlistButton,
-            {
-              backgroundColor: isInWishlist ? "#f43f5e" : "#f8bbd9",
-              marginBottom: 8,
-            },
-          ]}
-        >
-          <Text style={styles.buttonText}>
-            {isInWishlist ? "❤️ Remove" : "🤍 Add to Wishlist"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => onToggleAlreadyHave(card)}
-          style={[
-            styles.wishlistButton,
-            { backgroundColor: isAlreadyHave ? "#10b981" : "#e5e7eb" },
-          ]}
-        >
-          <Text
+        <View style={styles.cardFooter}>
+          <Text style={styles.cardPrice}>{priceDisplay}</Text>
+          <TouchableOpacity
+            onPress={() => onToggleAlreadyHave(card)}
             style={[
-              styles.buttonText,
-              { color: isAlreadyHave ? "white" : "#374151" },
+              styles.ownedButton,
+              { backgroundColor: isAlreadyHave ? "#059669" : "#374151" },
             ]}
           >
-            {isAlreadyHave ? "✅ Have It" : "📦 Mark as Owned"}
-          </Text>
-        </TouchableOpacity>
+            <Text style={styles.ownedButtonText}>
+              {isAlreadyHave ? "✓ Owned" : "Own it"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -764,68 +749,42 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
-          <StatusBar style="light" />
-          <SafeAreaView style={styles.header} edges={["top"]}>
-            <TouchableOpacity onPress={() => setCurrentView("home")}>
-              <Text style={styles.backButton}>← Back</Text>
+          <StatusBar style="dark" />
+          {/* Top Nav */}
+          <SafeAreaView style={styles.navbar} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")} style={styles.navBack}>
+              <Text style={styles.navBackText}>← Back</Text>
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>
-              My Wishlist ({wishlist.length})
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.headerButtons}
-            >
-              <TouchableOpacity
-                onPress={() => setCurrentView("chat")}
-                style={styles.headerButton}
-              >
-                <Text style={styles.headerButtonText}>💬 Chat</Text>
-              </TouchableOpacity>
+            <Text style={styles.navTitle}>My Wishlist</Text>
+            <View style={styles.navRight}>
               <TouchableOpacity
                 onPress={async () => {
                   try {
-                    // Save to per-user storage (primary)
                     const result = await authService.saveWishlist(wishlist);
-                    // Also sync to local wishlistDb as backup
                     await wishlistDb.clearWishlist();
-                    await Promise.all(
-                      wishlist.map((card) => wishlistDb.addToWishlist(card)),
-                    );
-                    if (result.success) {
-                      Alert.alert("Saved!", "Wishlist saved to your account");
-                    } else {
-                      Alert.alert(
-                        "Warning",
-                        "Saved locally but account sync failed. Your data is safe.",
-                      );
-                    }
-                  } catch (error) {
+                    await Promise.all(wishlist.map((card) => wishlistDb.addToWishlist(card)));
+                    Alert.alert(result.success ? "Saved!" : "Warning", result.success ? "Wishlist saved to your account" : "Saved locally but account sync failed.");
+                  } catch {
                     Alert.alert("Error", "Failed to save wishlist");
                   }
                 }}
-                style={styles.headerButton}
+                style={styles.navActionBtn}
               >
-                <Text style={styles.headerButtonText}>💾 Save</Text>
+                <Text style={styles.navActionBtnText}>Save</Text>
               </TouchableOpacity>
-            </ScrollView>
+            </View>
           </SafeAreaView>
 
           {wishlist.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyTitle}>Your wishlist is empty</Text>
-              <Text style={styles.emptyText}>
-                Start adding trainer cards to see them here!
-              </Text>
+              <Text style={styles.emptyText}>Add trainer cards from the home page!</Text>
             </View>
           ) : (
             <FlatList
               data={wishlist}
               renderItem={({ item }) => (
-                <View
-                  style={isAlreadyHave(item) ? styles.ownedCardContainer : null}
-                >
+                <View style={isAlreadyHave(item) ? styles.ownedCardContainer : null}>
                   <TrainerCard
                     card={item}
                     isInWishlist={true}
@@ -835,17 +794,15 @@ export default function App() {
                   />
                   {isAlreadyHave(item) && (
                     <View style={styles.ownedBadge}>
-                      <Text style={styles.ownedBadgeText}>✅ OWNED</Text>
+                      <Text style={styles.ownedBadgeText}>OWNED</Text>
                     </View>
                   )}
                 </View>
               )}
-              keyExtractor={(item, index) =>
-                `wishlist-${item.productId}-${index}`
-              }
+              keyExtractor={(item, index) => `wishlist-${item.productId}-${index}`}
               numColumns={numColumns}
               key={`wishlist-${numColumns}`}
-              contentContainerStyle={{ padding: 8 }}
+              contentContainerStyle={styles.gridContent}
             />
           )}
         </View>
@@ -857,25 +814,19 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
-          <StatusBar style="light" />
-          <SafeAreaView style={styles.header} edges={["top"]}>
-            <TouchableOpacity onPress={() => setCurrentView("home")}>
-              <Text style={styles.backButton}>← Back</Text>
+          <StatusBar style="dark" />
+          <SafeAreaView style={styles.navbar} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")} style={styles.navBack}>
+              <Text style={styles.navBackText}>← Back</Text>
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>
-              My Collection ({alreadyHave.length})
-            </Text>
-            <TouchableOpacity onPress={() => setCurrentView("chat")}>
-              <Text style={styles.chatButton}>💬</Text>
-            </TouchableOpacity>
+            <Text style={styles.navTitle}>My Collection</Text>
+            <View style={{ width: 60 }} />
           </SafeAreaView>
 
           {alreadyHave.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyTitle}>Your collection is empty</Text>
-              <Text style={styles.emptyText}>
-                Start marking cards as owned to see them here!
-              </Text>
+              <Text style={styles.emptyText}>Mark cards as owned from the home page!</Text>
             </View>
           ) : (
             <FlatList
@@ -889,12 +840,10 @@ export default function App() {
                   onToggleAlreadyHave={toggleAlreadyHave}
                 />
               )}
-              keyExtractor={(item, index) =>
-                `collection-${item.productId}-${index}`
-              }
+              keyExtractor={(item, index) => `collection-${item.productId}-${index}`}
               numColumns={numColumns}
               key={`collection-${numColumns}`}
-              contentContainerStyle={{ padding: 8 }}
+              contentContainerStyle={styles.gridContent}
             />
           )}
         </View>
@@ -1075,13 +1024,13 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
-          <StatusBar style="light" />
-          <SafeAreaView style={styles.header} edges={["top"]}>
-            <TouchableOpacity onPress={() => setCurrentView("home")}>
-              <Text style={styles.backButton}>← Back</Text>
+          <StatusBar style="dark" />
+          <SafeAreaView style={styles.navbar} edges={["top"]}>
+            <TouchableOpacity onPress={() => setCurrentView("home")} style={styles.navBack}>
+              <Text style={styles.navBackText}>← Back</Text>
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>AI Assistant</Text>
-            <View style={{ width: 40 }} />
+            <Text style={styles.navTitle}>AI Assistant</Text>
+            <View style={{ width: 60 }} />
           </SafeAreaView>
 
           <FlatList
@@ -1096,6 +1045,7 @@ export default function App() {
               value={chatInput}
               onChangeText={setChatInput}
               placeholder="Ask about trainer cards..."
+              placeholderTextColor="#6b7280"
               style={styles.chatInput}
             />
             <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
@@ -1111,15 +1061,10 @@ export default function App() {
   if (authLoading) {
     return (
       <SafeAreaProvider>
-        <View
-          style={[
-            styles.container,
-            { justifyContent: "center", alignItems: "center" },
-          ]}
-        >
-          <ActivityIndicator size="large" color="#f8bbd9" />
-          <Text style={[styles.loadingStatus, { marginTop: 16 }]}>
-            🌸 Loading your Pokemon collection...
+        <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+          <ActivityIndicator size="large" color="#10b981" />
+          <Text style={[styles.loadingStatus, { marginTop: 16, fontSize: 14 }]}>
+            Loading your collection...
           </Text>
         </View>
       </SafeAreaProvider>
@@ -1138,605 +1083,681 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
 
-        {/* Header */}
-        <SafeAreaView style={styles.header} edges={["top"]}>
-          <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>
-              {cardSection === "all" ? "All Pokemon Cards" : "Trainer Cards"}
-            </Text>
-            <Text style={styles.cacheStatus}>📊 Local Data Loaded</Text>
+        {/* ── Top Navbar ── */}
+        <SafeAreaView style={styles.navbar} edges={["top"]}>
+          {/* Logo / Brand */}
+          <View style={styles.navBrand}>
+            <Text style={styles.navLogo}>POKÉCOLLECT</Text>
+            <Text style={styles.navLogoSub}>Collect. Track. Profit.</Text>
           </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.headerButtons}
-          >
-            <TouchableOpacity
-              onPress={loadRealPokemonData}
-              style={[
-                styles.headerButton,
-                {
-                  backgroundColor: loading
-                    ? "rgba(255,255,255,0.1)"
-                    : "rgba(255,255,255,0.2)",
-                },
-              ]}
-              disabled={loading}
-            >
-              <Text style={styles.headerButtonText}>
-                {loading ? "🔄 Loading..." : "🔄 Refresh"}
-              </Text>
-            </TouchableOpacity>
 
+          {/* Nav links */}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navLinks}>
             <TouchableOpacity
-              onPress={() => setCurrentView("wishlist")}
-              style={styles.headerButton}
+              onPress={() => setCardSection("trainers")}
+              style={[styles.navLink, cardSection === "trainers" && styles.navLinkActive]}
             >
-              <Text style={styles.headerButtonText}>
-                ❤️ Wishlist ({wishlist.length})
+              <Text style={[styles.navLinkText, cardSection === "trainers" && styles.navLinkTextActive]}>
+                Trainer Cards
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setCurrentView("collection")}
-              style={styles.headerButton}
+              onPress={() => setCardSection("all")}
+              style={[styles.navLink, cardSection === "all" && styles.navLinkActive]}
             >
-              <Text style={styles.headerButtonText}>
-                📦 Collection ({alreadyHave.length})
+              <Text style={[styles.navLinkText, cardSection === "all" && styles.navLinkTextActive]}>
+                All Cards
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setCurrentView("chat")}
-              style={styles.headerButton}
-            >
-              <Text style={styles.headerButtonText}>💬 AI Chat</Text>
+            <TouchableOpacity onPress={() => setCurrentView("wishlist")} style={styles.navLink}>
+              <Text style={styles.navLinkText}>Wishlist {wishlist.length > 0 ? `(${wishlist.length})` : ""}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleLogout}
-              style={[
-                styles.headerButton,
-                { backgroundColor: "rgba(255,255,255,0.15)" },
-              ]}
-            >
-              <Text style={styles.headerButtonText}>👋 Logout</Text>
+            <TouchableOpacity onPress={() => setCurrentView("collection")} style={styles.navLink}>
+              <Text style={styles.navLinkText}>Collection {alreadyHave.length > 0 ? `(${alreadyHave.length})` : ""}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setCurrentView("chat")} style={styles.navLink}>
+              <Text style={styles.navLinkText}>AI Chat</Text>
             </TouchableOpacity>
           </ScrollView>
 
-          {/* User Info */}
-          {currentUser && (
-            <View style={styles.userInfo}>
-              <Text style={styles.userInfoText}>
-                👤 Welcome, {currentUser.username}!
-              </Text>
-            </View>
-          )}
+          {/* Right side — user + logout */}
+          <View style={styles.navRight}>
+            {currentUser && (
+              <Text style={styles.navUser}>{currentUser.username}</Text>
+            )}
+            <TouchableOpacity onPress={handleLogout} style={styles.navLogoutBtn}>
+              <Text style={styles.navLogoutText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
 
-        {/* Section Switcher */}
-        <View style={styles.sectionSwitcher}>
-          <TouchableOpacity
-            onPress={() => setCardSection("trainers")}
-            style={[
-              styles.sectionButton,
-              {
-                backgroundColor:
-                  cardSection === "trainers" ? "#f8bbd9" : "#f9fafb",
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sectionButtonText,
-                { color: cardSection === "trainers" ? "white" : "#6b7280" },
-              ]}
-            >
-              🎯 Trainer Cards ({trainerCards.length})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setCardSection("all")}
-            style={[
-              styles.sectionButton,
-              {
-                backgroundColor: cardSection === "all" ? "#f8bbd9" : "#f9fafb",
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sectionButtonText,
-                { color: cardSection === "all" ? "white" : "#6b7280" },
-              ]}
-            >
-              🃏 All Pokemon Cards ({allPokemonCards.length})
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Search */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder={`Search ${
-              cardSection === "all" ? "Pokemon" : "trainer"
-            } cards...`}
-            style={styles.searchInput}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery("")}>
-              <Text style={styles.clearButton}>✕</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Filters */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.filtersContainer}
-          contentContainerStyle={styles.filtersContainerInner}
-        >
-          <Text style={styles.filterLabel}>Rarity:</Text>
-          <TouchableOpacity
-            onPress={() =>
-              setSelectedRarity(
-                selectedRarity === "all"
-                  ? "rare"
-                  : selectedRarity === "rare"
-                    ? "ultra rare"
-                    : selectedRarity === "ultra rare"
-                      ? "secret rare"
-                      : selectedRarity === "secret rare"
-                        ? "hyper rare"
-                        : selectedRarity === "hyper rare"
-                          ? "rainbow rare"
-                          : selectedRarity === "rainbow rare"
-                            ? "gold rare"
-                            : "all",
-              )
-            }
-            style={[
-              styles.filterButton,
-              {
-                backgroundColor:
-                  selectedRarity !== "all" ? "#f8bbd9" : "#f9fafb",
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.filterButtonText,
-                { color: selectedRarity !== "all" ? "white" : "#6b7280" },
-              ]}
-            >
-              {selectedRarity === "all"
-                ? "All Rarities"
-                : selectedRarity.charAt(0).toUpperCase() +
-                  selectedRarity.slice(1)}
-            </Text>
-          </TouchableOpacity>
-
-          {selectedRarity !== "all" && (
-            <>
-              <TouchableOpacity
-                onPress={() => setShowAdvancedRarity(!showAdvancedRarity)}
-                style={[
-                  styles.filterButton,
-                  {
-                    backgroundColor: showAdvancedRarity ? "#f8bbd9" : "#f0f0f0",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.filterButtonText,
-                    { color: showAdvancedRarity ? "white" : "#6b7280" },
-                  ]}
-                >
-                  ⚙️ Advanced
-                </Text>
+        {/* ── Search Bar ── */}
+        <View style={styles.searchSection}>
+          <View style={styles.searchContainer}>
+            <Text style={styles.searchIcon}>🔍</Text>
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder={`Search ${cardSection === "all" ? "any card" : "trainer cards"}...`}
+              placeholderTextColor="#6b7280"
+              style={styles.searchInput}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery("")} style={styles.searchClearBtn}>
+                <Text style={styles.searchClearText}>✕</Text>
               </TouchableOpacity>
+            )}
+          </View>
+          <TouchableOpacity
+            onPress={loadRealPokemonData}
+            style={[styles.refreshBtn, loading && { opacity: 0.5 }]}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.refreshBtnText}>Refresh</Text>
+            )}
+          </TouchableOpacity>
+        </View>
 
-              {showAdvancedRarity && (
+        {/* ── Body: Sidebar + Grid ── */}
+        <View style={styles.body}>
+          {/* Left Sidebar Filters — hidden on narrow screens */}
+          {!isResponsive && (
+            <View style={styles.sidebar}>
+              <Text style={styles.sidebarHeading}>Filters</Text>
+
+              <Text style={styles.sidebarLabel}>Sort by</Text>
+              <View style={styles.sidebarDivider} />
+
+              <Text style={styles.sidebarLabel}>Rarity</Text>
+              {["all", "Common", "Uncommon", "Rare", "Rare Holo", "Ultra Rare", "Secret Rare"].map((r) => (
+                <TouchableOpacity
+                  key={r}
+                  onPress={() => setSelectedRarity(r === "all" ? "all" : r.toLowerCase())}
+                  style={styles.sidebarOption}
+                >
+                  <View style={[
+                    styles.sidebarRadio,
+                    (selectedRarity === (r === "all" ? "all" : r.toLowerCase())) && styles.sidebarRadioActive,
+                  ]} />
+                  <Text style={styles.sidebarOptionText}>{r === "all" ? "All Rarities" : r}</Text>
+                </TouchableOpacity>
+              ))}
+
+              <View style={styles.sidebarDivider} />
+              <Text style={styles.sidebarLabel}>Type</Text>
+              {["all", "pokemon", "trainer", "energy"].map((t) => (
+                <TouchableOpacity
+                  key={t}
+                  onPress={() => setSelectedType(t)}
+                  style={styles.sidebarOption}
+                >
+                  <View style={[styles.sidebarRadio, selectedType === t && styles.sidebarRadioActive]} />
+                  <Text style={styles.sidebarOptionText}>{t === "all" ? "All Types" : t.charAt(0).toUpperCase() + t.slice(1)}</Text>
+                </TouchableOpacity>
+              ))}
+
+              {(selectedRarity !== "all" || selectedType !== "all" || searchQuery) && (
                 <>
+                  <View style={styles.sidebarDivider} />
                   <TouchableOpacity
-                    onPress={() => setRarityFilter("exact")}
-                    style={[
-                      styles.filterButton,
-                      {
-                        backgroundColor:
-                          rarityFilter === "exact" ? "#f8bbd9" : "#f0f0f0",
-                      },
-                    ]}
+                    onPress={() => { setSelectedRarity("all"); setSelectedType("all"); setSearchQuery(""); }}
+                    style={styles.clearFiltersBtn}
                   >
-                    <Text
-                      style={[
-                        styles.filterButtonText,
-                        {
-                          color: rarityFilter === "exact" ? "white" : "#6b7280",
-                        },
-                      ]}
-                    >
-                      = Exact
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => setRarityFilter("higher")}
-                    style={[
-                      styles.filterButton,
-                      {
-                        backgroundColor:
-                          rarityFilter === "higher" ? "#f8bbd9" : "#f0f0f0",
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.filterButtonText,
-                        {
-                          color:
-                            rarityFilter === "higher" ? "white" : "#6b7280",
-                        },
-                      ]}
-                    >
-                      ≥ Higher
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => setRarityFilter("lower")}
-                    style={[
-                      styles.filterButton,
-                      {
-                        backgroundColor:
-                          rarityFilter === "lower" ? "#f8bbd9" : "#f0f0f0",
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.filterButtonText,
-                        {
-                          color: rarityFilter === "lower" ? "white" : "#6b7280",
-                        },
-                      ]}
-                    >
-                      ≤ Lower
-                    </Text>
+                    <Text style={styles.clearFiltersBtnText}>Clear Filters</Text>
                   </TouchableOpacity>
                 </>
               )}
-            </>
-          )}
-
-          <Text style={styles.filterLabel}>Type:</Text>
-          <TouchableOpacity
-            onPress={() =>
-              setSelectedType(
-                selectedType === "all"
-                  ? "pokemon"
-                  : selectedType === "pokemon"
-                    ? "trainer"
-                    : selectedType === "trainer"
-                      ? "energy"
-                      : "all",
-              )
-            }
-            style={[
-              styles.filterButton,
-              {
-                backgroundColor: selectedType !== "all" ? "#f8bbd9" : "#f9fafb",
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.filterButtonText,
-                { color: selectedType !== "all" ? "white" : "#6b7280" },
-              ]}
-            >
-              {selectedType === "all"
-                ? "All Types"
-                : selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedRarity("all");
-              setSelectedType("all");
-              setSearchQuery("");
-              setRarityFilter("exact");
-              setShowAdvancedRarity(false);
-            }}
-            style={[styles.filterButton, { backgroundColor: "#f8bbd9" }]}
-          >
-            <Text style={[styles.filterButtonText, { color: "white" }]}>
-              Clear Filters
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-
-        {/* Results */}
-        <View style={styles.resultsContainer}>
-          <Text style={styles.resultsText}>
-            {loading
-              ? "Loading..."
-              : `${filteredCards.length} ${
-                  cardSection === "all" ? "Pokemon" : "trainer"
-                } cards found`}
-          </Text>
-          {(selectedRarity !== "all" || selectedType !== "all") && (
-            <Text style={styles.filterIndicator}>
-              Filtered by:{" "}
-              {selectedRarity !== "all" &&
-                (rarityFilter === "exact"
-                  ? selectedRarity
-                  : rarityFilter === "higher"
-                    ? `≥ ${selectedRarity}`
-                    : `≤ ${selectedRarity}`)}{" "}
-              {selectedType !== "all" && selectedType}
-            </Text>
-          )}
-          {cardSection === "trainers" && loading && (
-            <Text style={styles.loadingStatus}>
-              📥 Loading trainer cards...
-            </Text>
-          )}
-          {loading && (
-            <View style={styles.loadingIndicator}>
-              <ActivityIndicator size="small" color="#f8bbd9" />
-              <Text style={styles.loadingText}>
-                Loading real data from TCGCSV...
-              </Text>
             </View>
           )}
-        </View>
 
-        {/* Card Grid */}
-        <FlatList
-          data={filteredCards}
-          renderItem={renderCard}
-          keyExtractor={(item, index) =>
-            `${item.productId}-${index}-${cardSection}`
-          }
-          numColumns={numColumns}
-          key={`${cardSection}-${numColumns}`}
-          contentContainerStyle={{
-            padding: 16,
-            alignItems: "stretch",
-            justifyContent: "center",
-          }}
-          columnWrapperStyle={{
-            justifyContent: "space-evenly",
-            marginBottom: 16,
-          }}
-          onEndReached={() => {
-            if (
-              cardSection === "all" &&
-              !loadingMore &&
-              allPokemonCards.length > 0
-            ) {
-              loadMoreCards();
-            }
-          }}
-          onEndReachedThreshold={0.3}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-          removeClippedSubviews={true}
-          ListFooterComponent={
-            loadingMore && (
-              <View style={styles.autoLoadingContainer}>
-                <ActivityIndicator size="small" color="#f8bbd9" />
-                <Text style={styles.autoLoadingText}>
-                  Loading more cards...
-                </Text>
+          {/* Main Content */}
+          <View style={styles.mainContent}>
+            {/* Filter chips row (mobile only) */}
+            {isResponsive && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow} contentContainerStyle={styles.chipRowInner}>
+                {["all", "common", "uncommon", "rare", "ultra rare"].map((r) => (
+                  <TouchableOpacity
+                    key={r}
+                    onPress={() => setSelectedRarity(r)}
+                    style={[styles.chip, selectedRarity === r && styles.chipActive]}
+                  >
+                    <Text style={[styles.chipText, selectedRarity === r && styles.chipTextActive]}>
+                      {r === "all" ? "All" : r.charAt(0).toUpperCase() + r.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+                {selectedType !== "all" && (
+                  <TouchableOpacity onPress={() => setSelectedType("all")} style={styles.chipActive}>
+                    <Text style={styles.chipTextActive}>{selectedType} ✕</Text>
+                  </TouchableOpacity>
+                )}
+              </ScrollView>
+            )}
+
+            {/* Results count + sort */}
+            <View style={styles.resultsBar}>
+              <Text style={styles.resultsText}>
+                {loading ? "Loading..." : `${filteredCards.length.toLocaleString()} ${cardSection === "all" ? "cards" : "trainer cards"}`}
+              </Text>
+              <View style={styles.sortRow}>
+                <Text style={styles.sortLabel}>Sort by: </Text>
+                <Text style={styles.sortValue}>Best Match</Text>
               </View>
-            )
-          }
-        />
+            </View>
+
+            {/* Card Grid */}
+            <FlatList
+              data={filteredCards}
+              renderItem={renderCard}
+              keyExtractor={(item, index) => `${item.productId}-${index}-${cardSection}`}
+              numColumns={numColumns}
+              key={`${cardSection}-${numColumns}`}
+              contentContainerStyle={styles.gridContent}
+              columnWrapperStyle={styles.gridRow}
+              onEndReached={() => {
+                if (cardSection === "all" && !loadingMore && allPokemonCards.length > 0) {
+                  loadMoreCards();
+                }
+              }}
+              onEndReachedThreshold={0.3}
+              maxToRenderPerBatch={12}
+              windowSize={10}
+              removeClippedSubviews={true}
+              ListFooterComponent={
+                loadingMore ? (
+                  <View style={styles.autoLoadingContainer}>
+                    <ActivityIndicator size="small" color="#10b981" />
+                    <Text style={styles.autoLoadingText}>Loading more cards...</Text>
+                  </View>
+                ) : null
+              }
+            />
+          </View>
+        </View>
       </View>
     </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  // ── Layout ──────────────────────────────────────────────
   container: {
     flex: 1,
-    backgroundColor: "#fef7f7",
+    backgroundColor: "#0f172a",
   },
-  header: {
-    backgroundColor: "#f8bbd9",
-    paddingHorizontal: isMobile ? 12 : 20,
-    paddingBottom: isMobile ? 16 : 20,
-    flexDirection: "column",
+  body: {
+    flex: 1,
+    flexDirection: "row",
   },
-  headerTitleContainer: {
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  headerTitle: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  cacheStatus: {
-    fontSize: 12,
-    color: "#fde68a",
-    fontWeight: "600",
-    marginTop: 2,
-  },
-  headerButtons: {
+
+  // ── Navbar ──────────────────────────────────────────────
+  navbar: {
+    backgroundColor: "#1e293b",
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 4,
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#334155",
   },
-  headerButton: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 15,
-    marginRight: 8,
-    alignItems: "center",
+  navBrand: {
+    marginRight: 24,
   },
-  headerButtonText: {
-    color: "white",
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  userInfo: {
-    alignItems: "center",
-    marginTop: 8,
-  },
-  userInfoText: {
-    color: "white",
-    fontSize: isMobile ? 12 : 14,
-    fontWeight: "500",
-    opacity: 0.9,
-  },
-  backButton: {
-    color: "white",
+  navLogo: {
+    color: "#10b981",
     fontSize: 16,
+    fontWeight: "900",
+    letterSpacing: 1,
+  },
+  navLogoSub: {
+    color: "#64748b",
+    fontSize: 9,
+    letterSpacing: 0.5,
+    marginTop: 1,
+  },
+  navLinks: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexGrow: 1,
+  },
+  navLink: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    marginRight: 4,
+    borderRadius: 6,
+  },
+  navLinkActive: {
+    backgroundColor: "rgba(16,185,129,0.1)",
+  },
+  navLinkText: {
+    color: "#94a3b8",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  navLinkTextActive: {
+    color: "#10b981",
+    fontWeight: "700",
+  },
+  navRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "auto",
+  },
+  navUser: {
+    color: "#94a3b8",
+    fontSize: 13,
+    marginRight: 12,
+  },
+  navLogoutBtn: {
+    borderWidth: 1,
+    borderColor: "#475569",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  navLogoutText: {
+    color: "#94a3b8",
+    fontSize: 13,
+  },
+  navBack: {
+    marginRight: 16,
+  },
+  navBackText: {
+    color: "#10b981",
+    fontSize: 15,
     fontWeight: "600",
   },
-  chatButton: {
+  navTitle: {
+    color: "#f1f5f9",
+    fontSize: 16,
+    fontWeight: "700",
+    flex: 1,
+  },
+  navActionBtn: {
+    backgroundColor: "#10b981",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  navActionBtnText: {
     color: "white",
-    fontSize: 20,
+    fontSize: 13,
+    fontWeight: "700",
+  },
+
+  // ── Search Section ───────────────────────────────────────
+  searchSection: {
+    backgroundColor: "#1e293b",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#334155",
+    gap: 10,
   },
   searchContainer: {
-    backgroundColor: "white",
-    margin: 16,
-    borderRadius: 16,
+    flex: 1,
+    backgroundColor: "#0f172a",
+    borderWidth: 1,
+    borderColor: "#334155",
+    borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    shadowColor: "#f8bbd9",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
-    borderWidth: 2,
-    borderColor: "#f4c2c2",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  searchIcon: {
+    fontSize: 14,
+    marginRight: 8,
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
-    color: "#1f2937",
+    fontSize: 14,
+    color: "#f1f5f9",
   },
-  clearButton: {
-    color: "#6b7280",
-    fontSize: 18,
-    fontWeight: "bold",
+  searchClearBtn: {
+    paddingLeft: 8,
   },
-  resultsContainer: {
+  searchClearText: {
+    color: "#64748b",
+    fontSize: 14,
+  },
+  refreshBtn: {
+    backgroundColor: "#10b981",
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 8,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  refreshBtnText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+
+  // ── Sidebar ──────────────────────────────────────────────
+  sidebar: {
+    width: 200,
+    backgroundColor: "#1e293b",
+    borderRightWidth: 1,
+    borderRightColor: "#334155",
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  sidebarHeading: {
+    color: "#f1f5f9",
+    fontSize: 14,
+    fontWeight: "700",
+    marginBottom: 16,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+  },
+  sidebarLabel: {
+    color: "#94a3b8",
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  sidebarDivider: {
+    height: 1,
+    backgroundColor: "#334155",
+    marginVertical: 12,
+  },
+  sidebarOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+  },
+  sidebarRadio: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 2,
+    borderColor: "#475569",
+    marginRight: 10,
+  },
+  sidebarRadioActive: {
+    borderColor: "#10b981",
+    backgroundColor: "#10b981",
+  },
+  sidebarOptionText: {
+    color: "#cbd5e1",
+    fontSize: 13,
+  },
+  clearFiltersBtn: {
+    marginTop: 8,
+    paddingVertical: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#475569",
+    alignItems: "center",
+  },
+  clearFiltersBtnText: {
+    color: "#94a3b8",
+    fontSize: 13,
+  },
+
+  // ── Main Content ─────────────────────────────────────────
+  mainContent: {
+    flex: 1,
+  },
+
+  // Mobile filter chips
+  chipRow: {
+    backgroundColor: "#1e293b",
+    borderBottomWidth: 1,
+    borderBottomColor: "#334155",
+    maxHeight: 48,
+  },
+  chipRowInner: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "white",
   },
-  resultsText: {
-    color: "#6b7280",
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  filterIndicator: {
-    fontSize: 12,
-    color: "#f8bbd9",
-    fontStyle: "italic",
-  },
-  loadingStatus: {
-    fontSize: 11,
-    color: "#f8bbd9",
-    fontStyle: "italic",
-    marginTop: 4,
-  },
-  loadingIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-  },
-  loadingText: {
-    color: "#3b82f6",
-    fontSize: 12,
-    marginLeft: 8,
-  },
-  sectionSwitcher: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    padding: 16,
-    borderBottomWidth: 2,
-    borderBottomColor: "#f4c2c2",
-  },
-  sectionButton: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginHorizontal: 4,
-    alignItems: "center",
-  },
-  sectionButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  filtersContainer: {
-    backgroundColor: "white",
-    borderBottomWidth: 2,
-    borderBottomColor: "#f4c2c2",
-    maxHeight: 56,
-  },
-  filtersContainerInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
-    marginRight: 8,
-  },
-  filterButton: {
+  chip: {
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 4,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#334155",
+    marginRight: 8,
+    backgroundColor: "#0f172a",
+  },
+  chipActive: {
+    backgroundColor: "rgba(16,185,129,0.15)",
+    borderColor: "#10b981",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 16,
     marginRight: 8,
-    marginVertical: 2,
   },
-  filterButtonText: {
+  chipText: {
+    color: "#94a3b8",
+    fontSize: 12,
+  },
+  chipTextActive: {
+    color: "#10b981",
     fontSize: 12,
     fontWeight: "600",
   },
-  loadMoreContainer: {
-    padding: 16,
+
+  // Results bar
+  resultsBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-  },
-  loadMoreButton: {
-    backgroundColor: "#f8bbd9",
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    borderRadius: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1e293b",
+  },
+  resultsText: {
+    color: "#94a3b8",
+    fontSize: 13,
+  },
+  sortRow: {
+    flexDirection: "row",
     alignItems: "center",
   },
-  loadMoreText: {
-    color: "white",
-    fontSize: 16,
+  sortLabel: {
+    color: "#64748b",
+    fontSize: 13,
+  },
+  sortValue: {
+    color: "#94a3b8",
+    fontSize: 13,
     fontWeight: "600",
   },
-  autoLoadingContainer: {
+
+  // Grid
+  gridContent: {
+    padding: 12,
+  },
+  gridRow: {
+    justifyContent: "flex-start",
+    marginBottom: 12,
+  },
+
+  // ── Card ─────────────────────────────────────────────────
+  card: {
+    backgroundColor: "#1e293b",
+    borderRadius: 12,
+    overflow: "hidden",
+    flex: 1,
+    margin: 6,
+    borderWidth: 1,
+    borderColor: "#334155",
+    maxWidth: isMobile ? width / 2 - 18 : 200,
+  },
+  cardImageWrapper: {
+    backgroundColor: "#0f172a",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    position: "relative",
+  },
+  cardImage: {
+    width: "100%",
+    height: 180,
+    resizeMode: "contain",
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 6,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 20,
+  },
+  cardContent: {
+    padding: 12,
+  },
+  cardName: {
+    color: "#f1f5f9",
+    fontSize: 14,
+    fontWeight: "700",
+    marginBottom: 3,
+    lineHeight: 18,
+  },
+  cardSet: {
+    color: "#64748b",
+    fontSize: 11,
+    marginBottom: 6,
+  },
+  cardMeta: {
     flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
+    marginBottom: 8,
+  },
+  rarityBadge: {
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  cardTypeBadge: {
+    color: "#64748b",
+    fontSize: 11,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
+  },
+  cardPrice: {
+    color: "#10b981",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  ownedButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  ownedButtonText: {
+    color: "white",
+    fontSize: 11,
+    fontWeight: "600",
+  },
+
+  // ── Empty state ──────────────────────────────────────────
+  emptyContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 32,
   },
-  autoLoadingText: {
-    marginLeft: 8,
-    color: "#6b7280",
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#94a3b8",
+    marginBottom: 8,
+  },
+  emptyText: {
     fontSize: 14,
+    color: "#64748b",
+    textAlign: "center",
+  },
+
+  // ── Chat ─────────────────────────────────────────────────
+  chatContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    backgroundColor: "#0f172a",
+  },
+  chatMessage: {
+    marginVertical: 4,
+    padding: 12,
+    borderRadius: 12,
+    maxWidth: "80%",
+  },
+  botMessage: {
+    backgroundColor: "#1e293b",
+    alignSelf: "flex-start",
+  },
+  userMessage: {
+    backgroundColor: "#10b981",
+    alignSelf: "flex-end",
+  },
+  botText: {
+    color: "#e2e8f0",
+  },
+  userText: {
+    color: "white",
+  },
+  chatInputContainer: {
+    flexDirection: "row",
+    padding: 12,
+    backgroundColor: "#1e293b",
+    borderTopWidth: 1,
+    borderTopColor: "#334155",
+    gap: 8,
+  },
+  chatInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#334155",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: "#0f172a",
+    color: "#f1f5f9",
+  },
+  sendButton: {
+    backgroundColor: "#10b981",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    justifyContent: "center",
+  },
+  sendButtonText: {
+    color: "white",
+    fontWeight: "700",
   },
   chatCardsContainer: {
     flexDirection: "row",
@@ -1752,159 +1773,32 @@ const styles = StyleSheet.create({
     width: 80,
     height: 112,
     borderRadius: 8,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#1e293b",
   },
   chatCardName: {
     fontSize: 10,
     textAlign: "center",
     marginTop: 4,
-    color: "#374151",
+    color: "#94a3b8",
   },
-  card: {
-    backgroundColor: "white",
-    margin: isMobile ? 4 : 8,
-    borderRadius: 16,
-    padding: isMobile ? 12 : 16,
-    flex: 1,
-    shadowColor: "#f8bbd9",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 8,
-    minHeight: isMobile ? 320 : 380,
-    maxWidth: isMobile ? width / 2 - 16 : 180,
-    borderWidth: 2,
-    borderColor: "#f4c2c2",
-  },
-  cardImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 12,
-    resizeMode: "contain",
-    backgroundColor: "#f8fafc",
-  },
-  cardContent: {
-    flex: 1,
-  },
-  cardName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1f2937",
-    marginBottom: 6,
-    textAlign: "center",
-    lineHeight: 20,
-  },
-  cardSet: {
+
+  // ── Misc ─────────────────────────────────────────────────
+  loadingStatus: {
     fontSize: 12,
-    color: "#2563eb",
-    marginBottom: 4,
-    textAlign: "center",
+    color: "#10b981",
+    fontStyle: "italic",
+    marginTop: 4,
   },
-  cardPrice: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#059669",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  cardTags: {
+  autoLoadingContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    marginBottom: 12,
-  },
-  tag: {
-    backgroundColor: "#f3e8ff",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
-    marginHorizontal: 2,
-    marginBottom: 4,
-  },
-  tagText: {
-    fontSize: 11,
-    color: "#7c3aed",
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  wishlistButton: {
-    paddingVertical: 8,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  emptyContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 32,
+    padding: 20,
   },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#6b7280",
-    marginBottom: 8,
-  },
-  emptyText: {
+  autoLoadingText: {
+    marginLeft: 8,
+    color: "#64748b",
     fontSize: 14,
-    color: "#9ca3af",
-    textAlign: "center",
-  },
-  chatContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  chatMessage: {
-    marginVertical: 4,
-    padding: 12,
-    borderRadius: 12,
-    maxWidth: "80%",
-  },
-  botMessage: {
-    backgroundColor: "#f3f4f6",
-    alignSelf: "flex-start",
-  },
-  userMessage: {
-    backgroundColor: "#f8bbd9",
-    alignSelf: "flex-end",
-  },
-  botText: {
-    color: "#1f2937",
-  },
-  userText: {
-    color: "white",
-  },
-  chatInputContainer: {
-    flexDirection: "row",
-    padding: 16,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
-  },
-  chatInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginRight: 8,
-  },
-  sendButton: {
-    backgroundColor: "#f8bbd9",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
-    justifyContent: "center",
-  },
-  sendButtonText: {
-    color: "white",
-    fontWeight: "600",
   },
   ownedBadge: {
     position: "absolute",
@@ -1912,21 +1806,16 @@ const styles = StyleSheet.create({
     right: 8,
     backgroundColor: "#10b981",
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    shadowColor: "#10b981",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    paddingVertical: 3,
+    borderRadius: 10,
+    elevation: 4,
   },
   ownedBadgeText: {
     color: "white",
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   ownedCardContainer: {
-    opacity: 0.8,
-    transform: [{ scale: 0.98 }],
+    opacity: 0.85,
   },
 });
