@@ -35,7 +35,9 @@ class AuthService {
       // Check if session is active (email confirmation may block this)
       const session = data.session;
       if (!session) {
-        console.warn("No session after signup — email confirmation may be enabled in Supabase.");
+        console.warn(
+          "No session after signup — email confirmation may be enabled in Supabase.",
+        );
       }
 
       // Create profile row in profiles table
@@ -47,7 +49,11 @@ class AuthService {
       });
 
       if (profileError) {
-        console.error("Error creating profile:", profileError.message, profileError.details);
+        console.error(
+          "Error creating profile:",
+          profileError.message,
+          profileError.details,
+        );
       }
 
       const appUser = {
@@ -124,24 +130,21 @@ class AuthService {
 
   // Logout user
   async logout() {
+    this.currentUser = null;
+    await AsyncStorage.removeItem("currentUser");
     try {
       await supabase.auth.signOut();
     } catch (error) {
       console.error("Supabase signout error:", error);
     }
-    this.currentUser = null;
-    await AsyncStorage.removeItem("currentUser");
     return { success: true };
   }
 
   // Get current user
   async getCurrentUser() {
-    if (this.currentUser) {
-      return this.currentUser;
-    }
-
     try {
-      // Check Supabase session first
+      // Always check Supabase session — do NOT fall back to AsyncStorage cache
+      // if there is no live session, as it will be stale after logout.
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -167,12 +170,9 @@ class AuthService {
         return appUser;
       }
 
-      // Fallback to local storage
-      const userData = await AsyncStorage.getItem("currentUser");
-      if (userData) {
-        this.currentUser = JSON.parse(userData);
-        return this.currentUser;
-      }
+      // No active session — ensure stale cache is cleared
+      this.currentUser = null;
+      await AsyncStorage.removeItem("currentUser");
     } catch (error) {
       console.error("Error getting current user:", error);
     }
