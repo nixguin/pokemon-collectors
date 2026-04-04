@@ -1,248 +1,189 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
-  Text,
   FlatList,
-  TextInput,
-  TouchableOpacity,
+  Text,
   ActivityIndicator,
-  RefreshControl,
-  Alert,
+  TouchableOpacity,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import TrainerCard from "../components/TrainerCard";
-import tcgcsvApi from "../services/tcgcsvApi";
-import { demoTrainerCards } from "../services/demoData";
+import { StatusBar } from "expo-status-bar";
+import Navbar from "../components/Navbar";
+import SearchBar from "../components/SearchBar";
 
-const HomeScreen = ({ navigation }) => {
-  const [trainerCards, setTrainerCards] = useState([]);
-  const [filteredCards, setFilteredCards] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("all");
+import CardItem from "../components/CardItem";
+import CardDetailModal from "../components/CardDetailModal";
+import homeStyles from "../styles/homeStyles";
 
-  const filters = [
-    { key: "all", label: "All Cards", icon: "grid" },
-    { key: "supporter", label: "Supporter", icon: "person" },
-    { key: "item", label: "Item", icon: "cube" },
-    { key: "stadium", label: "Stadium", icon: "business" },
-    { key: "tool", label: "Tool", icon: "hammer" },
-  ];
-
-  useEffect(() => {
-    loadTrainerCards();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [trainerCards, searchQuery, selectedFilter]);
-
-  const loadTrainerCards = async () => {
-    try {
-      setLoading(true);
-
-      // For demo purposes, let's load a sample of Pokemon products
-      // In a real app, you'd want to implement pagination or caching
-      const groups = await tcgcsvApi.getPokemonGroups();
-      const sampleGroups = groups.slice(0, 5); // Load first 5 sets for demo
-
-      let allProducts = [];
-      for (const group of sampleGroups) {
-        try {
-          const products = await tcgcsvApi.getPokemonProducts(group.groupId);
-          allProducts.push(...products);
-        } catch (error) {
-          console.warn(`Failed to load group ${group.groupId}:`, error);
-        }
-      }
-
-      // Filter for trainer cards
-      const trainers = tcgcsvApi.filterTrainerCards(allProducts);
-      setTrainerCards(trainers.length > 0 ? trainers : demoTrainerCards);
-    } catch (error) {
-      console.error("Error loading trainer cards:", error);
-      console.log("Using demo data as fallback");
-      setTrainerCards(demoTrainerCards);
-      Alert.alert(
-        "Using Demo Data",
-        "Could not connect to TCGCSV API. Using demo trainer cards for testing."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await loadTrainerCards();
-    setRefreshing(false);
-  };
-
-  const applyFilters = () => {
-    let filtered = [...trainerCards];
-
-    // Apply search query
-    if (searchQuery.trim()) {
-      filtered = filtered.filter(
-        (card) =>
-          card.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.cleanName.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Apply category filter
-    if (selectedFilter !== "all") {
-      filtered = filtered.filter((card) => {
-        const extendedData = card.extendedData || [];
-        const cardType =
-          extendedData
-            .find((data) => data.name === "CardType")
-            ?.value?.toLowerCase() || "";
-        const name = card.name.toLowerCase();
-
-        switch (selectedFilter) {
-          case "supporter":
-            return cardType.includes("supporter") || name.includes("supporter");
-          case "item":
-            return cardType.includes("item") || name.includes("item");
-          case "stadium":
-            return cardType.includes("stadium") || name.includes("stadium");
-          case "tool":
-            return cardType.includes("tool") || name.includes("tool");
-          default:
-            return true;
-        }
-      });
-    }
-
-    setFilteredCards(filtered);
-  };
+/**
+ * Main browse screen: navbar + search + filters + card grid + detail modal.
+ *
+ * Props come from App.js (spread from hooks + state).
+ */
+const HomeScreen = ({
+  // Auth
+  currentUser,
+  onLogout,
+  // Navigation
+  cardSection,
+  setCardSection,
+  setCurrentView,
+  // Card data
+  loading,
+  loadingMore,
+  loadRealPokemonData,
+  // Collections
+  wishlist,
+  alreadyHave,
+  toggleWishlist,
+  toggleAlreadyHave,
+  isInWishlist,
+  isAlreadyHave,
+  // Filters
+  filteredCards,
+  searchQuery,
+  setSearchQuery,
+  selectedRarity,
+  setSelectedRarity,
+  selectedType,
+  setSelectedType,
+  cuteMode,
+  setCuteMode,
+  cuteError,
+  retryScoring,
+  clearFilters,
+  // Layout
+  numColumns,
+  isResponsive,
+}) => {
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const renderCard = ({ item }) => (
-    <View style={{ flex: 1, margin: 8 }}>
-      <TrainerCard card={item} onWishlistChange={() => {}} />
-    </View>
+    <CardItem
+      card={item}
+      isInWishlist={isInWishlist(item)}
+      onToggleWishlist={toggleWishlist}
+      isAlreadyHave={isAlreadyHave(item)}
+      onToggleAlreadyHave={toggleAlreadyHave}
+      onPress={() => setSelectedCard(item)}
+    />
   );
 
-  const renderFilter = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => setSelectedFilter(item.key)}
-      className={`flex-row items-center px-4 py-2 rounded-full mr-3 ${
-        selectedFilter === item.key ? "bg-blue-500" : "bg-gray-200"
-      }`}
-    >
-      <Ionicons
-        name={item.icon}
-        size={16}
-        color={selectedFilter === item.key ? "white" : "#6b7280"}
-        style={{ marginRight: 4 }}
-      />
-      <Text
-        className={`text-sm font-medium ${
-          selectedFilter === item.key ? "text-white" : "text-gray-600"
-        }`}
-      >
-        {item.label}
-      </Text>
-    </TouchableOpacity>
-  );
-
-  if (loading) {
-    return (
-      <View className="flex-1 bg-gray-50 justify-center items-center">
-        <ActivityIndicator size="large" color="#2563eb" />
-        <Text className="text-gray-600 mt-4 text-center px-8">
-          Loading trainer cards from TCGCSV...
-        </Text>
-        <Text className="text-gray-400 text-sm mt-2 text-center px-8">
-          This may take a moment as we fetch the latest data
-        </Text>
-      </View>
-    );
-  }
+  const resultsLabel = loading
+    ? "Loading..."
+    : cuteMode
+      ? `✨ ${filteredCards.length.toLocaleString()} cute cards`
+      : `${filteredCards.length.toLocaleString()} ${cardSection === "all" ? "cards" : "trainer cards"}`;
 
   return (
-    <View className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="bg-blue-600 p-4 pt-12">
-        <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-white text-xl font-bold">Trainer Cards</Text>
-          <View className="flex-row">
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Wishlist")}
-              className="bg-white/20 rounded-full p-2 mr-2"
-            >
-              <Ionicons name="heart" size={20} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Chatbot", { trainerCards })}
-              className="bg-white/20 rounded-full p-2"
-            >
-              <Ionicons name="chatbubble-ellipses" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-        </View>
+    <View style={homeStyles.container}>
+      <StatusBar style="dark" />
 
-        {/* Search Bar */}
-        <View className="flex-row items-center bg-white rounded-full px-4 py-3">
-          <Ionicons name="search" size={20} color="#6b7280" />
-          <TextInput
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search trainer cards..."
-            className="flex-1 ml-3 text-gray-800"
-            placeholderTextColor="#9ca3af"
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery("")}>
-              <Ionicons name="close-circle" size={20} color="#6b7280" />
-            </TouchableOpacity>
+      <Navbar
+        cardSection={cardSection}
+        setCardSection={setCardSection}
+        cuteMode={cuteMode}
+        setCuteMode={setCuteMode}
+        setCurrentView={setCurrentView}
+        wishlistCount={wishlist.length}
+        collectionCount={alreadyHave.length}
+        currentUser={currentUser}
+        onLogout={onLogout}
+        isResponsive={isResponsive}
+      />
+
+      <SearchBar
+        searchQuery={searchQuery}
+        onChangeText={setSearchQuery}
+        onClear={() => setSearchQuery("")}
+        onRefresh={loadRealPokemonData}
+        loading={loading}
+        cardSection={cardSection}
+      />
+
+      <View style={homeStyles.body}>
+        <View style={homeStyles.mainContent}>
+          {/* Results bar */}
+          <View style={homeStyles.resultsBar}>
+            <Text style={homeStyles.resultsText}>{resultsLabel}</Text>
+            <View style={homeStyles.sortRow}>
+              <Text style={homeStyles.sortLabel}>Sort by: </Text>
+              <Text style={homeStyles.sortValue}>
+                {cuteMode ? "✨ Cuteness" : "Best Match"}
+              </Text>
+            </View>
+          </View>
+
+          {/* Cute AI error banner */}
+          {cuteMode && cuteError && (
+            <View
+              style={{
+                backgroundColor: "#fee2e2",
+                borderRadius: 8,
+                padding: 12,
+                margin: 8,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#dc2626", fontSize: 13, flex: 1 }}>
+                ⚠️ {cuteError}
+              </Text>
+              <TouchableOpacity
+                onPress={retryScoring}
+                style={{
+                  marginLeft: 12,
+                  backgroundColor: "#dc2626",
+                  borderRadius: 6,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
+                >
+                  Retry
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
+
+          {/* Card grid */}
+          <FlatList
+            data={filteredCards}
+            renderItem={renderCard}
+            keyExtractor={(item, index) =>
+              `${item.productId}-${index}-${cardSection}`
+            }
+            numColumns={numColumns}
+            key={`${cardSection}-${numColumns}`}
+            contentContainerStyle={homeStyles.gridContent}
+            columnWrapperStyle={homeStyles.gridRow}
+            onEndReachedThreshold={0.3}
+            maxToRenderPerBatch={12}
+            windowSize={10}
+            removeClippedSubviews={true}
+            ListFooterComponent={
+              loadingMore ? (
+                <View style={homeStyles.autoLoadingContainer}>
+                  <ActivityIndicator size="small" color="#10b981" />
+                  <Text style={homeStyles.autoLoadingText}>
+                    Loading more cards...
+                  </Text>
+                </View>
+              ) : null
+            }
+          />
         </View>
       </View>
 
-      {/* Filters */}
-      <View className="bg-white border-b border-gray-200 py-3">
-        <FlatList
-          data={filters}
-          renderItem={renderFilter}
-          keyExtractor={(item) => item.key}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16 }}
-        />
-      </View>
-
-      {/* Results Count */}
-      <View className="bg-white px-4 py-2 border-b border-gray-200">
-        <Text className="text-gray-600 text-sm">
-          {filteredCards.length} trainer card
-          {filteredCards.length !== 1 ? "s" : ""} found
-        </Text>
-      </View>
-
-      {/* Card List */}
-      <FlatList
-        data={filteredCards}
-        renderItem={renderCard}
-        keyExtractor={(item) => item.productId.toString()}
-        numColumns={2}
-        contentContainerStyle={{ padding: 8 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={
-          <View className="flex-1 justify-center items-center py-20">
-            <Ionicons name="search" size={64} color="#d1d5db" />
-            <Text className="text-gray-500 text-lg mt-4">
-              No trainer cards found
-            </Text>
-            <Text className="text-gray-400 text-sm mt-2 text-center px-8">
-              Try adjusting your search or filter criteria
-            </Text>
-          </View>
-        }
+      <CardDetailModal
+        card={selectedCard}
+        onClose={() => setSelectedCard(null)}
+        isInWishlist={selectedCard ? isInWishlist(selectedCard) : false}
+        onToggleWishlist={toggleWishlist}
+        isAlreadyHave={selectedCard ? isAlreadyHave(selectedCard) : false}
+        onToggleAlreadyHave={toggleAlreadyHave}
       />
     </View>
   );

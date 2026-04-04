@@ -38,6 +38,16 @@ yarn-error.*
 # Cache
 .cache/
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Large data / generated files
+pokemon-cuteness-ranker/data/cards_raw.json
+pokemon-cuteness-ranker/data/pokeapi_cache.json
+pokemon-cuteness-ranker/data/pastel_cache.json
+
 # Logs
 logs
 *.log

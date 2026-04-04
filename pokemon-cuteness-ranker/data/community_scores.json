@@ -1,0 +1,3025 @@
+{
+  "Eevee": {
+    "avg_score": 9.4,
+    "sources_count": 2,
+    "raw_scores": [
+      9.8,
+      9.0
+    ]
+  },
+  "Pikachu": {
+    "avg_score": 9.35,
+    "sources_count": 2,
+    "raw_scores": [
+      9.7,
+      9.0
+    ]
+  },
+  "Mew": {
+    "avg_score": 9.3,
+    "sources_count": 2,
+    "raw_scores": [
+      9.6,
+      9.0
+    ]
+  },
+  "Jigglypuff": {
+    "avg_score": 9.25,
+    "sources_count": 2,
+    "raw_scores": [
+      9.5,
+      9.0
+    ]
+  },
+  "Togepi": {
+    "avg_score": 9.25,
+    "sources_count": 2,
+    "raw_scores": [
+      9.5,
+      9.0
+    ]
+  },
+  "Sylveon": {
+    "avg_score": 9.25,
+    "sources_count": 2,
+    "raw_scores": [
+      9.5,
+      9.0
+    ]
+  },
+  "Pichu": {
+    "avg_score": 9.25,
+    "sources_count": 2,
+    "raw_scores": [
+      9.5,
+      9.0
+    ]
+  },
+  "Clefairy": {
+    "avg_score": 9.2,
+    "sources_count": 2,
+    "raw_scores": [
+      9.4,
+      9.0
+    ]
+  },
+  "Piplup": {
+    "avg_score": 9.2,
+    "sources_count": 2,
+    "raw_scores": [
+      9.4,
+      9.0
+    ]
+  },
+  "Marill": {
+    "avg_score": 9.15,
+    "sources_count": 2,
+    "raw_scores": [
+      9.3,
+      9.0
+    ]
+  },
+  "Espeon": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Vaporeon": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Leafeon": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Glaceon": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Flareon": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Jolteon": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Umbreon": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Togekiss": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Togetic": {
+    "avg_score": 8.8,
+    "sources_count": 2,
+    "raw_scores": [
+      8.6,
+      9.0
+    ]
+  },
+  "Clefable": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Wigglytuff": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Ralts": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Gardevoir": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Kirlia": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Snubbull": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Granbull": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Chansey": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Blissey": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Happiny": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Azumarill": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Azurill": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Plusle": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Minun": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Pachirisu": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Emolga": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Dedenne": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Mimikyu": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Shaymin": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Manaphy": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Phione": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Celebi": {
+    "avg_score": 9.1,
+    "sources_count": 1,
+    "raw_scores": [
+      9.1
+    ]
+  },
+  "Jirachi": {
+    "avg_score": 9.2,
+    "sources_count": 1,
+    "raw_scores": [
+      9.2
+    ]
+  },
+  "Victini": {
+    "avg_score": 9.15,
+    "sources_count": 2,
+    "raw_scores": [
+      9.3,
+      9.0
+    ]
+  },
+  "Meloetta": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Diancie": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Comfey": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Ribombee": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Cutiefly": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Alcremie": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Milcery": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Swirlix": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Slurpuff": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Snorunt": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Glalie": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Snowrunt": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Froslass": {
+    "avg_score": 8.4,
+    "sources_count": 1,
+    "raw_scores": [
+      8.4
+    ]
+  },
+  "Buneary": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Lopunny": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Skitty": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Delcatty": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Meowth": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Persian": {
+    "avg_score": 8.7,
+    "sources_count": 2,
+    "raw_scores": [
+      8.4,
+      9.0
+    ]
+  },
+  "Glameow": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Purugly": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Purrloin": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Liepard": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Espurr": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Meowstic": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Sprigatito": {
+    "avg_score": 9.15,
+    "sources_count": 2,
+    "raw_scores": [
+      9.3,
+      9.0
+    ]
+  },
+  "Floragato": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Meowscarada": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Scorbunny": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Raboot": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Cinderace": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Sobble": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Drizzile": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Inteleon": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Bulbasaur": {
+    "avg_score": 8.65,
+    "sources_count": 2,
+    "raw_scores": [
+      8.3,
+      9.0
+    ]
+  },
+  "Ivysaur": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Squirtle": {
+    "avg_score": 8.7,
+    "sources_count": 2,
+    "raw_scores": [
+      8.4,
+      9.0
+    ]
+  },
+  "Wartortle": {
+    "avg_score": 7.9,
+    "sources_count": 1,
+    "raw_scores": [
+      7.9
+    ]
+  },
+  "Charmander": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Charmeleon": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Caterpie": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Metapod": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Butterfree": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Weedle": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Cleffa": {
+    "avg_score": 9.15,
+    "sources_count": 2,
+    "raw_scores": [
+      9.3,
+      9.0
+    ]
+  },
+  "Igglybuff": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Elekid": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Magby": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Smoochum": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Tyrogue": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Bonsly": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Mime Jr": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Munchlax": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Riolu": {
+    "avg_score": 8.9,
+    "sources_count": 1,
+    "raw_scores": [
+      8.9
+    ]
+  },
+  "Mantyke": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Budew": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Chingling": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Wynaut": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Wobbuffet": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Toxel": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Hatenna": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Hattrem": {
+    "avg_score": 8.4,
+    "sources_count": 1,
+    "raw_scores": [
+      8.4
+    ]
+  },
+  "Hatterene": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Popplio": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Brionne": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Primarina": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Rowlet": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Dartrix": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Decidueye": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Litten": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Torracat": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Incineroar": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Phanpy": {
+    "avg_score": 8.8,
+    "sources_count": 2,
+    "raw_scores": [
+      8.6,
+      9.0
+    ]
+  },
+  "Donphan": {
+    "avg_score": 4.75,
+    "sources_count": 2,
+    "raw_scores": [
+      7.5,
+      2.0
+    ]
+  },
+  "Teddiursa": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Ursaring": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Swinub": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Piloswine": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Mamoswine": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Chikorita": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Cyndaquil": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Totodile": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Mudkip": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Torchic": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Treecko": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Oshawott": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Dewott": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Samurott": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Snivy": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Servine": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Serperior": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Tepig": {
+    "avg_score": 8.8,
+    "sources_count": 2,
+    "raw_scores": [
+      8.6,
+      9.0
+    ]
+  },
+  "Pignite": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Emboar": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Chespin": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Quilladin": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Chesnaught": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Fennekin": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Braixen": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Delphox": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Froakie": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Frogadier": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Greninja": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Grookey": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Thwackey": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Rillaboom": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Fuecoco": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Crocalor": {
+    "avg_score": 8.4,
+    "sources_count": 1,
+    "raw_scores": [
+      8.4
+    ]
+  },
+  "Skeledirge": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Quaxly": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Quaxwell": {
+    "avg_score": 8.4,
+    "sources_count": 1,
+    "raw_scores": [
+      8.4
+    ]
+  },
+  "Quaquaval": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Charcadet": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Armarouge": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Ceruledge": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Fidough": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Dachsbun": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Maschiff": {
+    "avg_score": 8.6,
+    "sources_count": 2,
+    "raw_scores": [
+      8.2,
+      9.0
+    ]
+  },
+  "Sinistea": {
+    "avg_score": 8.8,
+    "sources_count": 2,
+    "raw_scores": [
+      8.6,
+      9.0
+    ]
+  },
+  "Polteageist": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Wooloo": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Dubwool": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Alolan Vulpix": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Vulpix": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Ninetales": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Alolan Ninetales": {
+    "avg_score": 9.1,
+    "sources_count": 1,
+    "raw_scores": [
+      9.1
+    ]
+  },
+  "Ponyta": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Rapidash": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Galarian Ponyta": {
+    "avg_score": 9.4,
+    "sources_count": 1,
+    "raw_scores": [
+      9.4
+    ]
+  },
+  "Galarian Rapidash": {
+    "avg_score": 9.1,
+    "sources_count": 1,
+    "raw_scores": [
+      9.1
+    ]
+  },
+  "Mareep": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Flaaffy": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Ampharos": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Snover": {
+    "avg_score": 8.4,
+    "sources_count": 1,
+    "raw_scores": [
+      8.4
+    ]
+  },
+  "Abomasnow": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Amaura": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Aurorus": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Corsola": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Galarian Corsola": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Cursola": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Spritzee": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Aromatisse": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Flabebe": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Floette": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Florges": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Goomy": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Sliggoo": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Goodra": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Phantump": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Trevenant": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Pumpkaboo": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Gourgeist": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Xerneas": {
+    "avg_score": 5.4,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      2.0
+    ]
+  },
+  "Deerling": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Sawsbuck": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Audino": {
+    "avg_score": 8.8,
+    "sources_count": 2,
+    "raw_scores": [
+      8.6,
+      9.0
+    ]
+  },
+  "Swablu": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Altaria": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Cottonee": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Whimsicott": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Petilil": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Lilligant": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Minccino": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Cinccino": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Cubchoo": {
+    "avg_score": 8.85,
+    "sources_count": 2,
+    "raw_scores": [
+      8.7,
+      9.0
+    ]
+  },
+  "Beartic": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Vanillite": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Vanillish": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Vanilluxe": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Dewpider": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Araquanid": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Crabrawler": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Bounsweet": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Steenee": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Tsareena": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Oranguru": {
+    "avg_score": 4.75,
+    "sources_count": 2,
+    "raw_scores": [
+      7.5,
+      2.0
+    ]
+  },
+  "Passimian": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Sandygast": {
+    "avg_score": 8.2,
+    "sources_count": 1,
+    "raw_scores": [
+      8.2
+    ]
+  },
+  "Palossand": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Drampa": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Togedemaru": {
+    "avg_score": 9.0,
+    "sources_count": 2,
+    "raw_scores": [
+      9.0,
+      9.0
+    ]
+  },
+  "Morelull": {
+    "avg_score": 8.95,
+    "sources_count": 2,
+    "raw_scores": [
+      8.9,
+      9.0
+    ]
+  },
+  "Shiinotic": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Wishiwashi": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Pyukumuku": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Type Null": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Silvally": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Turtonator": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Bruxish": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Dhelmise": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Jangmo-o": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Hakamo-o": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Kommo-o": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Marshadow": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Zeraora": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Meltan": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Melmetal": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Grubbin": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Stufful": {
+    "avg_score": 9.05,
+    "sources_count": 2,
+    "raw_scores": [
+      9.1,
+      9.0
+    ]
+  },
+  "Bewear": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Wimpod": {
+    "avg_score": 8.3,
+    "sources_count": 1,
+    "raw_scores": [
+      8.3
+    ]
+  },
+  "Salandit": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Salazzle": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Rockruff": {
+    "avg_score": 9.1,
+    "sources_count": 2,
+    "raw_scores": [
+      9.2,
+      9.0
+    ]
+  },
+  "Lycanroc": {
+    "avg_score": 8.5,
+    "sources_count": 1,
+    "raw_scores": [
+      8.5
+    ]
+  },
+  "Komala": {
+    "avg_score": 8.7,
+    "sources_count": 1,
+    "raw_scores": [
+      8.7
+    ]
+  },
+  "Minior": {
+    "avg_score": 8.6,
+    "sources_count": 1,
+    "raw_scores": [
+      8.6
+    ]
+  },
+  "Oricorio": {
+    "avg_score": 8.9,
+    "sources_count": 2,
+    "raw_scores": [
+      8.8,
+      9.0
+    ]
+  },
+  "Charizard": {
+    "avg_score": 4.5,
+    "sources_count": 2,
+    "raw_scores": [
+      7.0,
+      2.0
+    ]
+  },
+  "Venusaur": {
+    "avg_score": 4.6,
+    "sources_count": 2,
+    "raw_scores": [
+      7.2,
+      2.0
+    ]
+  },
+  "Blastoise": {
+    "avg_score": 4.65,
+    "sources_count": 2,
+    "raw_scores": [
+      7.3,
+      2.0
+    ]
+  },
+  "Gengar": {
+    "avg_score": 4.75,
+    "sources_count": 2,
+    "raw_scores": [
+      7.5,
+      2.0
+    ]
+  },
+  "Haunter": {
+    "avg_score": 4.5,
+    "sources_count": 2,
+    "raw_scores": [
+      7.0,
+      2.0
+    ]
+  },
+  "Gastly": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Alakazam": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Kadabra": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Abra": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Machamp": {
+    "avg_score": 4.25,
+    "sources_count": 2,
+    "raw_scores": [
+      6.5,
+      2.0
+    ]
+  },
+  "Machoke": {
+    "avg_score": 6.2,
+    "sources_count": 1,
+    "raw_scores": [
+      6.2
+    ]
+  },
+  "Machop": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Geodude": {
+    "avg_score": 4.25,
+    "sources_count": 2,
+    "raw_scores": [
+      6.5,
+      2.0
+    ]
+  },
+  "Graveler": {
+    "avg_score": 4.0,
+    "sources_count": 2,
+    "raw_scores": [
+      6.0,
+      2.0
+    ]
+  },
+  "Golem": {
+    "avg_score": 3.9,
+    "sources_count": 2,
+    "raw_scores": [
+      5.8,
+      2.0
+    ]
+  },
+  "Onix": {
+    "avg_score": 3.75,
+    "sources_count": 2,
+    "raw_scores": [
+      5.5,
+      2.0
+    ]
+  },
+  "Steelix": {
+    "avg_score": 3.6,
+    "sources_count": 2,
+    "raw_scores": [
+      5.2,
+      2.0
+    ]
+  },
+  "Snorlax": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Slowpoke": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Slowbro": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Slowking": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Psyduck": {
+    "avg_score": 8.7,
+    "sources_count": 2,
+    "raw_scores": [
+      8.4,
+      9.0
+    ]
+  },
+  "Golduck": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Poliwag": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Poliwhirl": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Magikarp": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Gyarados": {
+    "avg_score": 4.25,
+    "sources_count": 2,
+    "raw_scores": [
+      6.5,
+      2.0
+    ]
+  },
+  "Ditto": {
+    "avg_score": 8.75,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      9.0
+    ]
+  },
+  "Porygon": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Porygon2": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Porygon-Z": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Lapras": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Kangaskhan": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Tauros": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Mr Mime": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Scyther": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Jynx": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Electabuzz": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Magmar": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Pinsir": {
+    "avg_score": 5.5,
+    "sources_count": 1,
+    "raw_scores": [
+      5.5
+    ]
+  },
+  "Farfetchd": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Doduo": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Seel": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Dewgong": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Shellder": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Cloyster": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Drowzee": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Hypno": {
+    "avg_score": 6.2,
+    "sources_count": 1,
+    "raw_scores": [
+      6.2
+    ]
+  },
+  "Krabby": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Kingler": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Voltorb": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Electrode": {
+    "avg_score": 4.4,
+    "sources_count": 2,
+    "raw_scores": [
+      6.8,
+      2.0
+    ]
+  },
+  "Exeggcute": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Exeggutor": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Cubone": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Marowak": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Lickitung": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Koffing": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Weezing": {
+    "avg_score": 6.5,
+    "sources_count": 1,
+    "raw_scores": [
+      6.5
+    ]
+  },
+  "Rhyhorn": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Rhydon": {
+    "avg_score": 4.1,
+    "sources_count": 2,
+    "raw_scores": [
+      6.2,
+      2.0
+    ]
+  },
+  "Tangela": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Horsea": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Seadra": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Kingdra": {
+    "avg_score": 4.75,
+    "sources_count": 2,
+    "raw_scores": [
+      7.5,
+      2.0
+    ]
+  },
+  "Staryu": {
+    "avg_score": 7.0,
+    "sources_count": 1,
+    "raw_scores": [
+      7.0
+    ]
+  },
+  "Starmie": {
+    "avg_score": 6.8,
+    "sources_count": 1,
+    "raw_scores": [
+      6.8
+    ]
+  },
+  "Omanyte": {
+    "avg_score": 7.8,
+    "sources_count": 1,
+    "raw_scores": [
+      7.8
+    ]
+  },
+  "Omastar": {
+    "avg_score": 7.2,
+    "sources_count": 1,
+    "raw_scores": [
+      7.2
+    ]
+  },
+  "Kabuto": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Kabutops": {
+    "avg_score": 4.5,
+    "sources_count": 2,
+    "raw_scores": [
+      7.0,
+      2.0
+    ]
+  },
+  "Aerodactyl": {
+    "avg_score": 4.25,
+    "sources_count": 2,
+    "raw_scores": [
+      6.5,
+      2.0
+    ]
+  },
+  "Articuno": {
+    "avg_score": 8.0,
+    "sources_count": 1,
+    "raw_scores": [
+      8.0
+    ]
+  },
+  "Zapdos": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Moltres": {
+    "avg_score": 7.5,
+    "sources_count": 1,
+    "raw_scores": [
+      7.5
+    ]
+  },
+  "Dratini": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Dragonair": {
+    "avg_score": 8.8,
+    "sources_count": 1,
+    "raw_scores": [
+      8.8
+    ]
+  },
+  "Dragonite": {
+    "avg_score": 5.25,
+    "sources_count": 2,
+    "raw_scores": [
+      8.5,
+      2.0
+    ]
+  },
+  "Raichu": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Yamper": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Snom": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Pawmi": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Finizen": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Smoliv": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Tinkatink": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Lechonk": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Tandemaus": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Turtwig": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Chimchar": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Poochyena": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Spheal": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Buizel": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Cherubi": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Chatot": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Litwick": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Joltik": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Noibat": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Fomantis": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Nickit": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Chewtle": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Pincurchin": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Dreepy": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Nacli": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Tadbulb": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Wattrel": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Wiglett": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Gimmighoul": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Pawmo": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Gossifleur": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Applin": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Drifloon": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Indeedee": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Luvdisc": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Cherrim": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Zorua": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Alomomola": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Snowy": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Alolan Raichu": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Alolan Meowth": {
+    "avg_score": 9.0,
+    "sources_count": 1,
+    "raw_scores": [
+      9.0
+    ]
+  },
+  "Mewtwo": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Magneton": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Hitmonlee": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Hitmonchan": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Muk": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Arcanine": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Tyranitar": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Salamence": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Metagross": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Garchomp": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Lucario": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Darkrai": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Dialga": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Palkia": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Giratina": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Reshiram": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Zekrom": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Kyurem": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Yveltal": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Zygarde": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Solgaleo": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Lunala": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Necrozma": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Eternatus": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Zamazenta": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Zacian": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Koraidon": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Miraidon": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Scizor": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Heracross": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Houndoom": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Forretress": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Energy Removal": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Gust Of Wind": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Professor Oak": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Computer Search": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Itemfinder": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Switch": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Brock": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Misty": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Lt. Surge": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Sabrina": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Giovanni": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  },
+  "Blaine": {
+    "avg_score": 2.0,
+    "sources_count": 1,
+    "raw_scores": [
+      2.0
+    ]
+  }
+}

@@ -1,161 +1,149 @@
-import React, { useState, useEffect, useCallback } from "react";
+﻿import React from "react";
+import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import authService from "../services/authService";
+import * as wishlistDb from "../database/wishlistDb";
+import CardItem from "../components/CardItem";
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  RefreshControl,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
-import TrainerCard from "../components/TrainerCard";
-import wishlistDb from "../database/wishlistDb";
+  screenBaseStyles,
+  screenNavStyles,
+  emptyStateStyles,
+  gridStyles,
+} from "../styles/screenStyles";
 
-const WishlistScreen = ({ navigation }) => {
-  const [wishlistCards, setWishlistCards] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+/**
+ * Props:
+ *  wishlist            array
+ *  toggleWishlist      fn(card)
+ *  toggleAlreadyHave   fn(card)
+ *  isInWishlist        fn(card) => bool
+ *  isAlreadyHave       fn(card) => bool
+ *  numColumns          number
+ *  onBack              fn()
+ */
+const getCardPrice = (card) => {
+  const val = card.extendedData?.find((d) => d.name === "Price")?.value;
+  const n = parseFloat(val);
+  return isNaN(n) ? 0 : n;
+};
 
-  useFocusEffect(
-    useCallback(() => {
-      loadWishlist();
-    }, [])
+const WishlistScreen = ({
+  wishlist,
+  toggleWishlist,
+  toggleAlreadyHave,
+  isAlreadyHave,
+  numColumns,
+  onBack,
+}) => {
+  const totalPrice = wishlist.reduce(
+    (sum, card) => sum + getCardPrice(card),
+    0,
   );
-
-  const loadWishlist = async () => {
+  const knownCount = wishlist.filter((c) => getCardPrice(c) > 0).length;
+  const handleSave = async () => {
     try {
-      setLoading(true);
-      const wishlist = await wishlistDb.getWishlist();
-      setWishlistCards(wishlist);
-    } catch (error) {
-      console.error("Error loading wishlist:", error);
-      Alert.alert("Error", "Failed to load wishlist");
-    } finally {
-      setLoading(false);
+      const result = await authService.saveWishlist(wishlist);
+      await wishlistDb.clearWishlist();
+      await Promise.all(wishlist.map((card) => wishlistDb.addToWishlist(card)));
+      Alert.alert(
+        result.success ? "Saved!" : "Warning",
+        result.success
+          ? "Wishlist saved to your account"
+          : "Saved locally but account sync failed.",
+      );
+    } catch {
+      Alert.alert("Error", "Failed to save wishlist");
     }
   };
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await loadWishlist();
-    setRefreshing(false);
-  };
-
-  const clearWishlist = () => {
-    Alert.alert(
-      "Clear Wishlist",
-      "Are you sure you want to remove all cards from your wishlist?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clear All",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              for (const card of wishlistCards) {
-                await wishlistDb.removeFromWishlist(card.productId);
-              }
-              setWishlistCards([]);
-              Alert.alert("Success", "Wishlist cleared successfully");
-            } catch (error) {
-              console.error("Error clearing wishlist:", error);
-              Alert.alert("Error", "Failed to clear wishlist");
-            }
-          },
-        },
-      ]
-    );
-  };
-
-  const renderCard = ({ item }) => (
-    <View style={{ flex: 1, margin: 8 }}>
-      <TrainerCard card={item} onWishlistChange={loadWishlist} />
-    </View>
-  );
-
-  const calculateTotalValue = () => {
-    return wishlistCards
-      .reduce((total, card) => total + (card.price || 0), 0)
-      .toFixed(2);
-  };
-
   return (
-    <View className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="bg-blue-600 p-4 pt-12">
-        <View className="flex-row items-center justify-between mb-4">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="white" />
+    <SafeAreaProvider>
+      <View style={screenBaseStyles.container}>
+        <StatusBar style="dark" />
+        <SafeAreaView style={screenNavStyles.navbar} edges={["top"]}>
+          <TouchableOpacity onPress={onBack} style={screenNavStyles.backBtn}>
+            <Text style={screenNavStyles.backBtnText}>← Back</Text>
           </TouchableOpacity>
-          <Text className="text-white text-xl font-bold">My Wishlist</Text>
-          {wishlistCards.length > 0 && (
-            <TouchableOpacity onPress={clearWishlist}>
-              <Ionicons name="trash-outline" size={24} color="white" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Wishlist Stats */}
-        <View className="bg-white/20 rounded-xl p-4">
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-white text-lg font-semibold">
-                {wishlistCards.length} Cards
-              </Text>
-              <Text className="text-white/80 text-sm">
-                Total Est. Value: ${calculateTotalValue()}
-              </Text>
-            </View>
+          <Text style={screenNavStyles.title}>My Wishlist</Text>
+          <View style={screenNavStyles.rightSection}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Chatbot", { trainerCards: wishlistCards })
-              }
-              className="bg-white/20 rounded-full p-3"
+              onPress={handleSave}
+              style={screenNavStyles.actionBtn}
             >
-              <Ionicons name="chatbubble-ellipses" size={20} color="white" />
+              <Text style={screenNavStyles.actionBtnText}>Save</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
+        </SafeAreaView>
 
-      {/* Card List */}
-      {loading ? (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-600">Loading your wishlist...</Text>
-        </View>
-      ) : wishlistCards.length === 0 ? (
-        <View className="flex-1 justify-center items-center px-8">
-          <Ionicons name="heart-outline" size={64} color="#d1d5db" />
-          <Text className="text-gray-500 text-xl font-semibold mt-4 text-center">
-            Your Wishlist is Empty
-          </Text>
-          <Text className="text-gray-400 text-sm mt-2 text-center">
-            Start browsing trainer cards and add them to your wishlist to see
-            them here
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
-            className="bg-blue-500 px-6 py-3 rounded-full mt-6"
-          >
-            <Text className="text-white font-medium">Browse Trainer Cards</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <FlatList
-          data={wishlistCards}
-          renderItem={renderCard}
-          keyExtractor={(item) =>
-            item.id?.toString() || item.productId?.toString()
-          }
-          numColumns={2}
-          contentContainerStyle={{ padding: 8 }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      )}
-    </View>
+        {wishlist.length === 0 ? (
+          <View style={emptyStateStyles.container}>
+            <Text style={emptyStateStyles.title}>Your wishlist is empty</Text>
+            <Text style={emptyStateStyles.subtitle}>
+              Add trainer cards from the home page!
+            </Text>
+          </View>
+        ) : (
+          <>
+            {/* Total price bar */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#fdf2f8",
+                borderBottomWidth: 1,
+                borderBottomColor: "#f9a8d4",
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+              }}
+            >
+              <Text style={{ fontSize: 14, color: "#6b7280" }}>
+                {wishlist.length} card{wishlist.length !== 1 ? "s" : ""}
+                {knownCount < wishlist.length
+                  ? ` · ${wishlist.length - knownCount} without price`
+                  : ""}
+              </Text>
+              <Text
+                style={{ fontSize: 16, fontWeight: "700", color: "#ec4899" }}
+              >
+                Est. Total: ${totalPrice.toFixed(2)}
+              </Text>
+            </View>
+
+            <FlatList
+              data={wishlist}
+              renderItem={({ item }) => (
+                <View
+                  style={
+                    isAlreadyHave(item) ? gridStyles.ownedCardContainer : null
+                  }
+                >
+                  <CardItem
+                    card={item}
+                    isInWishlist={true}
+                    onToggleWishlist={toggleWishlist}
+                    isAlreadyHave={isAlreadyHave(item)}
+                    onToggleAlreadyHave={toggleAlreadyHave}
+                  />
+                  {isAlreadyHave(item) && (
+                    <View style={gridStyles.ownedBadge}>
+                      <Text style={gridStyles.ownedBadgeText}>OWNED</Text>
+                    </View>
+                  )}
+                </View>
+              )}
+              keyExtractor={(item, index) =>
+                `wishlist-${item.productId}-${index}`
+              }
+              numColumns={numColumns}
+              key={`wishlist-${numColumns}`}
+              contentContainerStyle={gridStyles.content}
+            />
+          </>
+        )}
+      </View>
+    </SafeAreaProvider>
   );
 };
 
