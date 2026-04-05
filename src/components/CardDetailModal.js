@@ -80,19 +80,26 @@ const CardDetailModal = ({
           if (!res.ok) return;
           const json = await res.json();
           const prices = json.data?.tcgplayer?.prices || {};
-          const market =
-            prices.holofoil?.market ??
-            prices.normal?.market ??
-            prices.reverseHolofoil?.market ??
-            prices["1stEditionHolofoil"]?.market ??
-            prices.unlimitedHolofoil?.market ??
-            prices.specialIllustrationRare?.market ??
-            prices.illustrationRare?.market ??
-            prices.doubleRare?.market ??
-            prices.hyperRare?.market ??
-            prices.aceSpec?.market ??
-            prices.shiny?.market ??
-            prices.shinyHoloRare?.market;
+          const SUBTYPES = [
+            "holofoil", "normal", "reverseHolofoil", "1stEditionHolofoil",
+            "unlimitedHolofoil", "1stEditionNormal", "unlimitedNormal",
+            "specialIllustrationRare", "illustrationRare", "doubleRare",
+            "hyperRare", "aceSpec", "shiny", "shinyHoloRare",
+          ];
+          let market = null;
+          for (const s of SUBTYPES) {
+            if (prices[s]?.market != null) { market = prices[s].market; break; }
+          }
+          if (market == null) {
+            for (const s of SUBTYPES) {
+              if (prices[s]?.mid != null) { market = prices[s].mid; break; }
+            }
+          }
+          if (market == null) {
+            for (const s of SUBTYPES) {
+              if (prices[s]?.low != null) { market = prices[s].low; break; }
+            }
+          }
           if (market != null) setLivePrice(market);
         }
       } catch {
