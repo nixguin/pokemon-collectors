@@ -3,7 +3,12 @@ import { getRarityValue } from "../utils/rarityUtils";
 import { findCuteCards } from "../services/cutenessAI";
 import { fetchCuteScoresFromSupabase } from "../services/pokemonApi";
 
-const useCardFilters = (allPokemonCards, trainerCards, cardSection, onePieceCards = []) => {
+const useCardFilters = (
+  allPokemonCards,
+  trainerCards,
+  cardSection,
+  onePieceCards = [],
+) => {
   const [filteredCards, setFilteredCards] = useState(trainerCards);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("all");

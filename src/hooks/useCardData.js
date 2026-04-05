@@ -39,7 +39,8 @@ const useCardData = (isAuthenticated) => {
   const loadRealPokemonData = async () => {
     setLoading(true);
     try {
-      const { pokemonCards, trainers, onePieceCards } = await fetchCardsFromSupabase();
+      const { pokemonCards, trainers, onePieceCards } =
+        await fetchCardsFromSupabase();
       if (pokemonCards.length > 0) {
         setAllPokemonCards(pokemonCards);
         setTrainerCards(trainers);

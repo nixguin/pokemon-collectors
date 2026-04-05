@@ -10,9 +10,11 @@ const SUPABASE_URL = "https://wtyxoufpbabvqsjiipuu.supabase.co";
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 if (!SUPABASE_SERVICE_KEY) {
-  console.error("Error: SUPABASE_SERVICE_KEY environment variable is required.");
   console.error(
-    "Run with: $env:SUPABASE_SERVICE_KEY='your_key'; node scripts/seedOnePieceCards.js"
+    "Error: SUPABASE_SERVICE_KEY environment variable is required.",
+  );
+  console.error(
+    "Run with: $env:SUPABASE_SERVICE_KEY='your_key'; node scripts/seedOnePieceCards.js",
   );
   process.exit(1);
 }
@@ -48,16 +50,16 @@ function convertCard(card, groupName) {
       cardGame: "OnePiece",
       extendedData: [
         { name: "CardType", value: cardType },
-        { name: "Rarity",   value: extVal("Rarity") },
-        { name: "SetName",  value: groupName || "" },
-        { name: "Number",   value: extVal("Number") },
-        { name: "Color",    value: extVal("Color") },
-        { name: "Power",    value: extVal("Power") },
-        { name: "Life",     value: extVal("Life") },
-        { name: "Attribute",value: extVal("Attribute") },
+        { name: "Rarity", value: extVal("Rarity") },
+        { name: "SetName", value: groupName || "" },
+        { name: "Number", value: extVal("Number") },
+        { name: "Color", value: extVal("Color") },
+        { name: "Power", value: extVal("Power") },
+        { name: "Life", value: extVal("Life") },
+        { name: "Attribute", value: extVal("Attribute") },
         { name: "Subtypes", value: extVal("Subtypes") },
         { name: "Description", value: extVal("Description") },
-        { name: "Price",    value: "" },
+        { name: "Price", value: "" },
       ],
     },
   };
@@ -74,7 +76,10 @@ async function fetchGroups() {
 async function fetchProducts(groupId) {
   const url = `${TCGCSV_BASE}/${ONE_PIECE_CATEGORY}/${groupId}/products`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Products fetch failed: ${res.status} for group ${groupId}`);
+  if (!res.ok)
+    throw new Error(
+      `Products fetch failed: ${res.status} for group ${groupId}`,
+    );
   const json = await res.json();
   return json.results || [];
 }
@@ -122,7 +127,10 @@ async function seed() {
       .filter((p) => {
         const ext = p.extendedData || [];
         // Skip sealed products (no CardType extendedData = likely a booster box)
-        return ext.some((e) => e.name === "CardType") || ext.some((e) => e.name === "Rarity");
+        return (
+          ext.some((e) => e.name === "CardType") ||
+          ext.some((e) => e.name === "Rarity")
+        );
       })
       .map((p) => convertCard(p, groupName));
 

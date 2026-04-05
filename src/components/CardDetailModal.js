@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,82 @@ const CardDetailModal = ({
 }) => {
   const { width: modalWidth, height: modalHeight } = useWindowDimensions();
   const isModalMobile = modalWidth < 768;
+  const [livePrice, setLivePrice] = useState(null);
+  const [livePriceLoading, setLivePriceLoading] = useState(false);
+
+  useEffect(() => {
+    if (!card) return;
+    setLivePrice(null);
+    setLivePriceLoading(true);
+
+    const isOnePiece =
+      card.cardGame === "OnePiece" ||
+      String(card.productId || "").startsWith("op_");
+
+    const isTCGCSVPokemon =
+      card.cardGame === "PokemonTCGCSV" ||
+      String(card.productId || "").startsWith("pk3_");
+
+    const fetchPrice = async () => {
+      try {
+        if (isOnePiece) {
+          const numericId = String(card.productId).replace(/^op_/, "");
+          const groupId = card.groupId;
+          if (!groupId) return;
+          const res = await fetch(
+            `https://tcgcsv.com/tcgplayer/68/${groupId}/prices`,
+          );
+          if (!res.ok) return;
+          const json = await res.json();
+          // Keep the highest marketPrice across subTypes (Normal/Foil)
+          let best = null;
+          for (const p of json.results || []) {
+            if (String(p.productId) === numericId && p.marketPrice != null) {
+              if (best === null || p.marketPrice > best) best = p.marketPrice;
+            }
+          }
+          if (best !== null) setLivePrice(best);
+        } else if (isTCGCSVPokemon) {
+          const numericId = String(card.productId).replace(/^pk3_/, "");
+          const groupId = card.groupId;
+          if (!groupId) return;
+          const res = await fetch(
+            `https://tcgcsv.com/tcgplayer/3/${groupId}/prices`,
+          );
+          if (!res.ok) return;
+          const json = await res.json();
+          let best = null;
+          for (const p of json.results || []) {
+            if (String(p.productId) === numericId && p.marketPrice != null) {
+              if (best === null || p.marketPrice > best) best = p.marketPrice;
+            }
+          }
+          if (best !== null) setLivePrice(best);
+        } else {
+          // Pokemon TCG API
+          const res = await fetch(
+            `https://api.pokemontcg.io/v2/cards/${card.productId}?select=id,tcgplayer`,
+          );
+          if (!res.ok) return;
+          const json = await res.json();
+          const prices = json.data?.tcgplayer?.prices || {};
+          const market =
+            prices.holofoil?.market ??
+            prices.normal?.market ??
+            prices.reverseHolofoil?.market ??
+            prices["1stEditionHolofoil"]?.market ??
+            prices.unlimitedHolofoil?.market;
+          if (market != null) setLivePrice(market);
+        }
+      } catch {
+        // silently fall back to stored price
+      } finally {
+        setLivePriceLoading(false);
+      }
+    };
+
+    fetchPrice();
+  }, [card?.productId]);
 
   if (!card) return null;
 
@@ -34,9 +110,14 @@ const CardDetailModal = ({
   const cardType = cardData.CardType || "Trainer";
   const rarity = cardData.Rarity || "Common";
   const cardNumber = cardData.Number || "";
-  const price = cardData.Price;
-  const priceDisplay =
-    price && price !== "N/A" ? `$${parseFloat(price).toFixed(2)}` : "N/A";
+  const storedPrice = cardData.Price;
+  const priceDisplay = livePriceLoading
+    ? "Fetching..."
+    : livePrice !== null
+      ? `$${parseFloat(livePrice).toFixed(2)}`
+      : storedPrice && storedPrice !== "N/A" && storedPrice !== ""
+        ? `$${parseFloat(storedPrice).toFixed(2)}`
+        : "N/A";
 
   const rarityColor = rarity.toLowerCase().includes("ultra")
     ? "#f59e0b"
