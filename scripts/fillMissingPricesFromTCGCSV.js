@@ -22,12 +22,28 @@ function sleep(ms) {
 
 // Strip common prefixes like "ME03: ", "ME: ", "SVE: ", "SV: ", "SWSH01: ", "XY - ", etc.
 function normalizeSetName(name) {
-  return String(name || "")
+  let s = String(name || "")
     .replace(/^(ME\d*|SVE?|SWSH\d*|XY|SM\d*|BW\d*|DP\d*|POP|EX)[^:]*:\s*/i, "")
     .replace(/^(XY|SM|BW|DP|EX)\s+-\s+/i, "")
     .replace(/^Pokémon TCG:\s*/i, "")
     .toLowerCase()
     .trim();
+
+  // Alias map: pokemontcg.io name → TCGCSV normalized name
+  const ALIASES = {
+    "sun & moon": "sm base set",
+    "mcdonald's collection 2014": "mcdonald's promos 2014",
+    "mcdonald's collection 2015": "mcdonald's promos 2015",
+    "mcdonald's collection 2016": "mcdonald's promos 2016",
+    "mcdonald's collection 2017": "mcdonald's promos 2017",
+    "mcdonald's collection 2018": "mcdonald's promos 2018",
+    "mcdonald's collection 2019": "mcdonald's promos 2019",
+    "ex trainer kit 2 plusle": "ex trainer kit 2: plusle & minun",
+    "ex trainer kit 2 minun": "ex trainer kit 2: plusle & minun",
+    "ex trainer kit latias": "ex trainer kit 1: latias & latios",
+    "ex trainer kit latios": "ex trainer kit 1: latias & latios",
+  };
+  return ALIASES[s] || s;
 }
 
 // "083/088" → "83",  "GG01/GG70" → "GG01",  "SWSH001" → "SWSH001"
