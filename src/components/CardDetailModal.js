@@ -85,7 +85,14 @@ const CardDetailModal = ({
             prices.normal?.market ??
             prices.reverseHolofoil?.market ??
             prices["1stEditionHolofoil"]?.market ??
-            prices.unlimitedHolofoil?.market;
+            prices.unlimitedHolofoil?.market ??
+            prices.specialIllustrationRare?.market ??
+            prices.illustrationRare?.market ??
+            prices.doubleRare?.market ??
+            prices.hyperRare?.market ??
+            prices.aceSpec?.market ??
+            prices.shiny?.market ??
+            prices.shinyHoloRare?.market;
           if (market != null) setLivePrice(market);
         }
       } catch {
