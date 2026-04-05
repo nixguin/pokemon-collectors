@@ -29,19 +29,27 @@ function normalizeSetName(name) {
     .toLowerCase()
     .trim();
 
-  // Alias map: pokemontcg.io name → TCGCSV normalized name
+  // Alias map: pokemontcg.io set name (normalized) → TCGCSV group name (normalized after prefix stripping)
   const ALIASES = {
+    // Base sets with different naming
     "sun & moon": "sm base set",
+    // Black Star Promos
+    "scarlet & violet black star promos": "scarlet & violet promo cards",
+    "xy black star promos": "xy promos",
+    "sm black star promos": "sm promos",
+    "swsh black star promos": "sword & shield promo cards",
+    // McDonald's (pokemontcg.io "Collection" vs TCGCSV "Promos")
     "mcdonald's collection 2014": "mcdonald's promos 2014",
     "mcdonald's collection 2015": "mcdonald's promos 2015",
     "mcdonald's collection 2016": "mcdonald's promos 2016",
     "mcdonald's collection 2017": "mcdonald's promos 2017",
     "mcdonald's collection 2018": "mcdonald's promos 2018",
     "mcdonald's collection 2019": "mcdonald's promos 2019",
-    "ex trainer kit 2 plusle": "ex trainer kit 2: plusle & minun",
-    "ex trainer kit 2 minun": "ex trainer kit 2: plusle & minun",
-    "ex trainer kit latias": "ex trainer kit 1: latias & latios",
-    "ex trainer kit latios": "ex trainer kit 1: latias & latios",
+    // EX Trainer Kits — TCGCSV strips prefix, leaving just the pokemon names
+    "ex trainer kit 2 plusle": "plusle & minun",
+    "ex trainer kit 2 minun": "plusle & minun",
+    "ex trainer kit latias": "latias & latios",
+    "ex trainer kit latios": "latias & latios",
   };
   return ALIASES[s] || s;
 }
