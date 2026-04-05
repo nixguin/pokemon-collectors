@@ -88,6 +88,15 @@ const Navbar = ({
             }}
           />
           <NavLink
+            label="🎌 Japanese"
+            active={cardSection === "japanese" && !cuteMode}
+            isMobile={isMobile}
+            onPress={() => {
+              setCardSection("japanese");
+              setCuteMode(false);
+            }}
+          />
+          <NavLink
             label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`}
             isMobile={isMobile}
             onPress={() => setCurrentView("wishlist")}

@@ -37,6 +37,10 @@ const CardDetailModal = ({
       card.cardGame === "PokemonTCGCSV" ||
       String(card.productId || "").startsWith("pk3_");
 
+    const isJapanesePokemon =
+      card.cardGame === "JapanesePokemon" ||
+      String(card.productId || "").startsWith("jp_");
+
     const fetchPrice = async () => {
       try {
         if (isOnePiece) {
@@ -72,6 +76,22 @@ const CardDetailModal = ({
             }
           }
           if (best !== null) setLivePrice(best);
+        } else if (isJapanesePokemon) {
+          const numericId = String(card.productId).replace(/^jp_/, "");
+          const groupId = card.groupId;
+          if (!groupId) return;
+          const res = await fetch(
+            `https://tcgcsv.com/tcgplayer/85/${groupId}/prices`,
+          );
+          if (!res.ok) return;
+          const json = await res.json();
+          let best = null;
+          for (const p of json.results || []) {
+            if (String(p.productId) === numericId && p.marketPrice != null) {
+              if (best === null || p.marketPrice > best) best = p.marketPrice;
+            }
+          }
+          if (best !== null) setLivePrice(best);
         } else {
           // Pokemon TCG API
           const res = await fetch(
@@ -81,23 +101,42 @@ const CardDetailModal = ({
           const json = await res.json();
           const prices = json.data?.tcgplayer?.prices || {};
           const SUBTYPES = [
-            "holofoil", "normal", "reverseHolofoil", "1stEditionHolofoil",
-            "unlimitedHolofoil", "1stEditionNormal", "unlimitedNormal",
-            "specialIllustrationRare", "illustrationRare", "doubleRare",
-            "hyperRare", "aceSpec", "shiny", "shinyHoloRare",
+            "holofoil",
+            "normal",
+            "reverseHolofoil",
+            "1stEditionHolofoil",
+            "unlimitedHolofoil",
+            "1stEditionNormal",
+            "unlimitedNormal",
+            "specialIllustrationRare",
+            "illustrationRare",
+            "doubleRare",
+            "hyperRare",
+            "aceSpec",
+            "shiny",
+            "shinyHoloRare",
           ];
           let market = null;
           for (const s of SUBTYPES) {
-            if (prices[s]?.market != null) { market = prices[s].market; break; }
-          }
-          if (market == null) {
-            for (const s of SUBTYPES) {
-              if (prices[s]?.mid != null) { market = prices[s].mid; break; }
+            if (prices[s]?.market != null) {
+              market = prices[s].market;
+              break;
             }
           }
           if (market == null) {
             for (const s of SUBTYPES) {
-              if (prices[s]?.low != null) { market = prices[s].low; break; }
+              if (prices[s]?.mid != null) {
+                market = prices[s].mid;
+                break;
+              }
+            }
+          }
+          if (market == null) {
+            for (const s of SUBTYPES) {
+              if (prices[s]?.low != null) {
+                market = prices[s].low;
+                break;
+              }
             }
           }
           if (market != null) setLivePrice(market);

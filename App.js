@@ -37,6 +37,7 @@ export default function App() {
     cardData.trainerCards,
     cardSection,
     cardData.onePieceCards,
+    cardData.japaneseCards,
   );
 
   // Auth loading screen

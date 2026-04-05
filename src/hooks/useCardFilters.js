@@ -8,6 +8,7 @@ const useCardFilters = (
   trainerCards,
   cardSection,
   onePieceCards = [],
+  japaneseCards = [],
 ) => {
   const [filteredCards, setFilteredCards] = useState(trainerCards);
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,6 +95,7 @@ const useCardFilters = (
     trainerCards,
     allPokemonCards,
     onePieceCards,
+    japaneseCards,
     cardSection,
     selectedRarity,
     selectedType,
@@ -103,6 +105,38 @@ const useCardFilters = (
   ]);
 
   const applyFilters = () => {
+    if (cardSection === "japanese") {
+      let results = [...japaneseCards];
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        results = results.filter(
+          (card) =>
+            card.name.toLowerCase().includes(query) ||
+            card.cleanName?.toLowerCase().includes(query) ||
+            (card.groupName || "").toLowerCase().includes(query) ||
+            (card.extendedData?.find((d) => d.name === "SetName")?.value || "")
+              .toLowerCase()
+              .includes(query),
+        );
+      }
+      if (selectedRarity !== "all") {
+        results = results.filter((card) => {
+          const cardRarity =
+            card.extendedData?.find((d) => d.name === "Rarity")?.value || "";
+          return cardRarity.toLowerCase().includes(selectedRarity.toLowerCase());
+        });
+      }
+      if (selectedType !== "all") {
+        results = results.filter((card) => {
+          const cardType =
+            card.extendedData?.find((d) => d.name === "CardType")?.value || "";
+          return cardType.toLowerCase().includes(selectedType.toLowerCase());
+        });
+      }
+      setFilteredCards(results);
+      return;
+    }
+
     if (cardSection === "onePiece") {
       let results = [...onePieceCards];
       if (searchQuery.trim()) {

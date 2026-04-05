@@ -158,7 +158,7 @@ export const fetchCardsFromSupabase = async () => {
   }
 
   const pokemonCards = allRows
-    .filter((row) => row.card_type !== "OnePiece")
+    .filter((row) => row.card_type !== "OnePiece" && row.card_type !== "JapanesePokemon")
     .map((row) => row.card_data);
   const trainers = allRows
     .filter((row) => row.card_type === "Trainer")
@@ -166,8 +166,11 @@ export const fetchCardsFromSupabase = async () => {
   const onePieceCards = allRows
     .filter((row) => row.card_type === "OnePiece")
     .map((row) => row.card_data);
+  const japaneseCards = allRows
+    .filter((row) => row.card_type === "JapanesePokemon")
+    .map((row) => row.card_data);
 
-  return { pokemonCards, trainers, onePieceCards };
+  return { pokemonCards, trainers, onePieceCards, japaneseCards };
 };
 
 // Fetch pre-computed cute scores from Supabase (fast path).

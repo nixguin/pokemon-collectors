@@ -185,23 +185,42 @@ async function updatePokemonPrices() {
       for (const c of cards) {
         const prices = c.tcgplayer?.prices || {};
         const SUBTYPES = [
-          "holofoil", "normal", "reverseHolofoil", "1stEditionHolofoil",
-          "unlimitedHolofoil", "1stEditionNormal", "unlimitedNormal",
-          "specialIllustrationRare", "illustrationRare", "doubleRare",
-          "hyperRare", "aceSpec", "shiny", "shinyHoloRare",
+          "holofoil",
+          "normal",
+          "reverseHolofoil",
+          "1stEditionHolofoil",
+          "unlimitedHolofoil",
+          "1stEditionNormal",
+          "unlimitedNormal",
+          "specialIllustrationRare",
+          "illustrationRare",
+          "doubleRare",
+          "hyperRare",
+          "aceSpec",
+          "shiny",
+          "shinyHoloRare",
         ];
         let market = null;
         for (const s of SUBTYPES) {
-          if (prices[s]?.market != null) { market = prices[s].market; break; }
-        }
-        if (market == null) {
-          for (const s of SUBTYPES) {
-            if (prices[s]?.mid != null) { market = prices[s].mid; break; }
+          if (prices[s]?.market != null) {
+            market = prices[s].market;
+            break;
           }
         }
         if (market == null) {
           for (const s of SUBTYPES) {
-            if (prices[s]?.low != null) { market = prices[s].low; break; }
+            if (prices[s]?.mid != null) {
+              market = prices[s].mid;
+              break;
+            }
+          }
+        }
+        if (market == null) {
+          for (const s of SUBTYPES) {
+            if (prices[s]?.low != null) {
+              market = prices[s].low;
+              break;
+            }
           }
         }
         if (market !== null) {
@@ -343,6 +362,98 @@ async function updateTCGCSVPokemonPrices() {
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
+async function updateJapanesePokemonPrices() {
+  console.log(
+    "\n=== Updating Japanese Pokemon Prices (category 85, jp_ prefix) ===",
+  );
+
+  let allRows = [];
+  let from = 0;
+  while (true) {
+    const { data, error } = await supabase
+      .from("cards")
+      .select("product_id, card_data")
+      .like("product_id", "jp_%")
+      .range(from, from + 999);
+    if (error) {
+      console.error("Supabase error:", error.message);
+      break;
+    }
+    if (!data?.length) break;
+    allRows.push(...data);
+    from += 1000;
+    if (data.length < 1000) break;
+  }
+
+  console.log(`Found ${allRows.length} Japanese Pokemon (jp_) cards in Supabase.`);
+  if (!allRows.length) return;
+
+  const byGroup = {};
+  for (const row of allRows) {
+    const groupId = row.card_data?.groupId;
+    if (!groupId) continue;
+    if (!byGroup[groupId]) byGroup[groupId] = [];
+    byGroup[groupId].push(row);
+  }
+
+  const groups = Object.keys(byGroup);
+  const updatedRows = [];
+
+  for (let i = 0; i < groups.length; i++) {
+    const groupId = groups[i];
+    const cards = byGroup[groupId];
+    process.stdout.write(`  [${i + 1}/${groups.length}] Group ${groupId} — `);
+
+    let priceMap = {};
+    try {
+      const res = await fetch(
+        `https://tcgcsv.com/tcgplayer/85/${groupId}/prices`,
+      );
+      if (res.ok) {
+        const json = await res.json();
+        for (const p of json.results || []) {
+          if (p.marketPrice == null) continue;
+          const existing = priceMap[p.productId];
+          if (existing === undefined || p.marketPrice > existing) {
+            priceMap[p.productId] = p.marketPrice;
+          }
+        }
+      }
+    } catch (err) {
+      console.log(`SKIP (${err.message})`);
+      continue;
+    }
+
+    let matched = 0;
+    for (const row of cards) {
+      const numericId = parseInt(
+        String(row.product_id).replace(/^jp_/, ""),
+        10,
+      );
+      const price = priceMap[numericId];
+      if (price === undefined) continue;
+      const extendedData = (row.card_data.extendedData || []).map((e) =>
+        e.name === "Price" ? { ...e, value: String(price) } : e,
+      );
+      updatedRows.push({
+        product_id: row.product_id,
+        name: row.card_data.name || row.product_id,
+        card_data: { ...row.card_data, extendedData },
+      });
+      matched++;
+    }
+    console.log(`${matched}/${cards.length} prices found`);
+    await sleep(DELAY_MS);
+  }
+
+  let total = 0;
+  for (let i = 0; i < updatedRows.length; i += 500) {
+    total += await upsertBatch(updatedRows.slice(i, i + 500));
+    await sleep(80);
+  }
+  console.log(`\nJapanese Pokemon done: ${total} cards updated.`);
+}
+
 async function main() {
   console.log("=== Price Refresh Script ===");
   if (onlyArg) console.log(`Scope: ${onlyArg} only`);
@@ -350,6 +461,7 @@ async function main() {
   if (!onlyArg || onlyArg === "onepiece") await updateOnePiecePrices();
   if (!onlyArg || onlyArg === "pokemon") await updatePokemonPrices();
   if (!onlyArg || onlyArg === "pokemon") await updateTCGCSVPokemonPrices();
+  if (!onlyArg || onlyArg === "japanese") await updateJapanesePokemonPrices();
 
   console.log("\n=== All done! ===");
 }
