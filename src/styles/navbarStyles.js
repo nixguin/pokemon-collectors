@@ -87,10 +87,50 @@ const navbarStyles = StyleSheet.create({
     flexShrink: 0,
     maxWidth: 180,
   },
+  userPillMobile: {
+    width: 34,
+    height: 34,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userPillIcon: {
+    fontSize: 16,
+  },
   userPillText: {
     color: "#ffffff",
     fontSize: 13,
     fontWeight: "600",
+  },
+
+  // Mobile overrides
+  pillMobile: {
+    marginHorizontal: 8,
+    marginTop: 6,
+    marginBottom: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+  },
+  logoCircleMobile: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 2,
+  },
+  logoEmojiMobile: {
+    fontSize: 15,
+  },
+  linksListMobile: {
+    gap: 0,
+    paddingHorizontal: 2,
+  },
+  linkMobile: {
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  linkTextMobile: {
+    fontSize: 12,
   },
 });
 

@@ -33,7 +33,7 @@ const SearchBar = ({
       <TextInput
         value={searchQuery}
         onChangeText={onChangeText}
-        placeholder={`Search ${cardSection === "all" ? "any card" : "trainer cards"}...`}
+        placeholder={`Search ${cardSection === "all" ? "any card" : "trainer cards"} or set name...`}
         placeholderTextColor="#6b7280"
         style={homeStyles.searchInput}
       />

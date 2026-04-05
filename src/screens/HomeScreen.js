@@ -68,11 +68,17 @@ const HomeScreen = ({
     />
   );
 
+  const sectionLabel =
+    cardSection === "all"
+      ? "cards"
+      : cardSection === "onePiece"
+        ? "One Piece cards"
+        : "trainer cards";
   const resultsLabel = loading
     ? "Loading..."
     : cuteMode
       ? `✨ ${filteredCards.length.toLocaleString()} cute cards`
-      : `${filteredCards.length.toLocaleString()} ${cardSection === "all" ? "cards" : "trainer cards"}`;
+      : `${filteredCards.length.toLocaleString()} ${sectionLabel}`;
 
   return (
     <View style={homeStyles.container}>

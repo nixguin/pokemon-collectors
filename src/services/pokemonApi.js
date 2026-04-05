@@ -157,10 +157,55 @@ export const fetchCardsFromSupabase = async () => {
     }
   }
 
-  const pokemonCards = allRows.map((row) => row.card_data);
+  const pokemonCards = allRows
+    .filter((row) => row.card_type !== "OnePiece")
+    .map((row) => row.card_data);
   const trainers = allRows
     .filter((row) => row.card_type === "Trainer")
     .map((row) => row.card_data);
+  const onePieceCards = allRows
+    .filter((row) => row.card_type === "OnePiece")
+    .map((row) => row.card_data);
 
-  return { pokemonCards, trainers };
+  return { pokemonCards, trainers, onePieceCards };
+};
+
+// Fetch pre-computed cute scores from Supabase (fast path).
+// Returns a { productId → score } map, or null if the table is empty / errors.
+export const fetchCuteScoresFromSupabase = async () => {
+  try {
+    let allRows = [];
+    let from = 0;
+    const batchSize = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from("cute_scores")
+        .select("product_id, cute_score")
+        .gte("cute_score", 0.45)
+        .range(from, from + batchSize - 1);
+
+      if (error) {
+        console.warn("cute_scores fetch error:", error.message);
+        return null;
+      }
+
+      if (data && data.length > 0) {
+        allRows.push(...data);
+        from += batchSize;
+        if (data.length < batchSize) hasMore = false;
+      } else {
+        hasMore = false;
+      }
+    }
+
+    if (!allRows.length) return null;
+    return Object.fromEntries(
+      allRows.map((r) => [String(r.product_id), r.cute_score]),
+    );
+  } catch (err) {
+    console.warn("fetchCuteScoresFromSupabase failed:", err);
+    return null;
+  }
 };

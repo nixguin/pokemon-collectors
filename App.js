@@ -36,6 +36,7 @@ export default function App() {
     cardData.allPokemonCards,
     cardData.trainerCards,
     cardSection,
+    cardData.onePieceCards,
   );
 
   // Auth loading screen

@@ -14,6 +14,7 @@ const useCardData = (isAuthenticated) => {
 
   const [allPokemonCards, setAllPokemonCards] = useState(instantAllCards);
   const [trainerCards, setTrainerCards] = useState(instantTrainerCards);
+  const [onePieceCards, setOnePieceCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -38,12 +39,15 @@ const useCardData = (isAuthenticated) => {
   const loadRealPokemonData = async () => {
     setLoading(true);
     try {
-      const { pokemonCards, trainers } = await fetchCardsFromSupabase();
+      const { pokemonCards, trainers, onePieceCards } = await fetchCardsFromSupabase();
       if (pokemonCards.length > 0) {
         setAllPokemonCards(pokemonCards);
         setTrainerCards(trainers);
       } else {
         console.log("No cards found in Supabase, using local data.");
+      }
+      if (onePieceCards.length > 0) {
+        setOnePieceCards(onePieceCards);
       }
     } catch (error) {
       console.error("Error loading cards from Supabase:", error);
@@ -59,6 +63,7 @@ const useCardData = (isAuthenticated) => {
   return {
     allPokemonCards,
     trainerCards,
+    onePieceCards,
     loading,
     loadingMore,
     loadRealPokemonData,
